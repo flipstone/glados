@@ -12,6 +12,8 @@ import Happstack.Server
 import Database.Persist
 import Database.Persist.Postgresql
 import Database.Persist.TH
+import Text.Hamlet (shamlet)
+
 import App.Types
 
 share [mkPersist sqlSettings, mkMigrate "migrateAll"] [persistLowerCase|
@@ -35,7 +37,15 @@ app = dir "people" people
 people :: App Response
 people = do
   people <- runDB $ selectList [] [] :: App [Entity Person]
-  ok $ toResponse (show people)
+  ok $ toResponse $ [shamlet|
+    <html>
+      <body>
+        <ul>
+          $forall Entity _ p <- people
+            <li>
+              #{personFirstName p}
+              #{personLastName p}
+    |]
 
 instance BackendHost IO where
   runDB action = do
