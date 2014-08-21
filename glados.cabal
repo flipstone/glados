@@ -21,6 +21,7 @@ executable glados
   -- other-modules:
   -- other-extensions:
   build-depends:       base >=4.6 && <4.7,
+                       blaze-html ==0.7.0.2,
                        digestive-functors == 0.7.1.1,
                        digestive-functors-blaze == 0.6.0.4,
                        digestive-functors-happstack == 0.6.1.0,
