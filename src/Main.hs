@@ -15,6 +15,10 @@ import Database.Persist.TH
 import App.Types
 
 share [mkPersist sqlSettings, mkMigrate "migrateAll"] [persistLowerCase|
+Person
+  firstName String
+  lastName String
+  deriving Show
 |]
 
 connString = "host=db port=5432 dbname=glados_dev user=glados password=glados" 
@@ -25,6 +29,17 @@ main = do
     putStrLn $ "Starting server on port " ++ (show $ 8000)
     simpleHTTP nullConf $ runApp pool app
 
-app :: App String
-app = ok ("Hello World!"::String)
+app :: App Response
+app = dir "people" people
+
+people :: App Response
+people = do
+  people <- runDB $ selectList [] [] :: App [Entity Person]
+  ok $ toResponse (show people)
+
+instance BackendHost IO where
+  runDB action = do
+    withPostgresqlPool connString 1 $ \pool -> do
+      runBackendPool pool action
+
 
