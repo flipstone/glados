@@ -34,7 +34,7 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
     end
   end
 
-  config.vm.define "api", primary: true do |api|
+  config.vm.define "app", primary: true do |api|
     api.vm.provider "docker" do |d|
       d.link 'glados_db:db'
       d.name    = "glados_app"
