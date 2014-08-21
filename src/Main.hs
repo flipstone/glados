@@ -7,12 +7,18 @@
 {-# LANGUAGE TypeFamilies      #-}
 module Main where
 
+import Control.Applicative
+import Control.Monad
 import Control.Monad.Logger (runStdoutLoggingT)
 import Happstack.Server
+import Data.Text (Text)
 import Database.Persist
 import Database.Persist.Postgresql
 import Database.Persist.TH
-import Text.Hamlet (shamlet)
+import Text.Digestive
+import Text.Digestive.Blaze.Html5
+import Text.Digestive.Happstack
+import Text.Hamlet (shamlet, Html)
 
 import App.Types
 
@@ -32,10 +38,19 @@ main = do
     simpleHTTP nullConf $ runApp pool app
 
 app :: App Response
-app = dir "people" people
+app = do
+  decodeBody $ defaultBodyPolicy "/tmp/" 4096 4096 4096
+  dir "people" people
 
 people :: App Response
-people = do
+people = msum [
+    methodM GET >> peopleList
+  , methodM POST >> peopleCreate
+  , dir "new" $ methodM GET >> peopleNew
+  ]
+
+peopleList :: App Response
+peopleList = do
   people <- runDB $ selectList [] [] :: App [Entity Person]
   ok $ toResponse $ [shamlet|
     <html>
@@ -46,6 +61,43 @@ people = do
               #{personFirstName p}
               #{personLastName p}
     |]
+
+peopleNew :: App Response
+peopleNew = do
+  view <- getForm "person" personForm
+  ok $ toResponse $ personView view
+
+personView :: View Text -> Html
+personView view = [shamlet|
+  <html>
+    <body>
+      <form action="/people" method="POST">
+        <div>
+          ^{label "firstName" view "First Name"}
+          ^{inputText "firstName" view}
+        <div>
+          ^{label "lastName" view "Last Name"}
+          ^{inputText "lastName" view}
+
+        <input type="submit" value="save">
+  |]
+
+peopleCreate :: App Response
+peopleCreate = do
+  (view, result) <- runForm "person" personForm
+
+  case result of
+    Just person -> do
+      runDB $ insert person
+      found ("/people"::String) $ toResponse ("Look over there"::String)
+
+    Nothing ->
+      badRequest $ toResponse $ personView view
+
+personForm :: Monad m => Form Text m Person
+personForm = Person
+         <$> "firstName" .: string Nothing
+         <*> "lastName" .: string Nothing
 
 instance BackendHost IO where
   runDB action = do

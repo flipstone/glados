@@ -39,6 +39,14 @@ instance FilterMonad Response App where
   composeFilter = App . composeFilter
   getFilter (App serverPart) = App (getFilter serverPart)
 
+instance WebMonad Response App where
+  finishWith = App . finishWith
+
+instance HasRqData App where
+  askRqEnv = App askRqEnv
+  localRqEnv f (App action) = App (localRqEnv f action)
+  rqDataError = App . rqDataError
+
 instance MonadSqlPersist App where
   askSqlConn = App (lift askSqlConn)
 
