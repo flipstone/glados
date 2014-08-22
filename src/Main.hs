@@ -1,5 +1,6 @@
 module Main where
 
+import Control.Monad (msum)
 import Control.Monad.Logger (runStdoutLoggingT)
 import Happstack.Server
 import Database.Persist.Postgresql
@@ -7,6 +8,7 @@ import Database.Persist.Postgresql
 import App.Types
 import Model.DB
 import Handler.People
+import Handler.Equipment
 
 connString = "host=db port=5432 dbname=glados_dev user=glados password=glados" 
 
@@ -19,7 +21,10 @@ main = do
 app :: App Response
 app = do
   decodeBody $ defaultBodyPolicy "/tmp/" 4096 4096 4096
-  dir "people" people
+  msum [
+      dir "equipment" equipment
+    , dir "people" people
+    ]
 
 instance BackendHost IO where
   runDB action = do

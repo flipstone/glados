@@ -1,15 +1,11 @@
 {-# LANGUAGE QuasiQuotes        #-}
 module View.People where
 
-import Data.Text (Text)
-import qualified Data.Text as T
-import qualified Data.Text.Encoding as E
 import Text.Digestive (View)
-import Text.Digestive.Blaze.Html5
 import Text.Hamlet (shamlet, Html)
-import Text.Blaze.Html (ToMarkup, toMarkup)
 
 import Model
+import View.Helpers
 
 peopleListView :: [Entity Person] -> Html
 peopleListView people = [shamlet|
@@ -47,30 +43,6 @@ peopleEditView (Entity id _) view = [shamlet|
 
 personFields :: View Html -> Html
 personFields view = [shamlet|
-  <div>
-    ^{label "firstName" view "First Name"}
-    ^{inputText "firstName" view}
-    ^{errorList "firstName" view}
-  <div>
-    ^{label "lastName" view "Last Name"}
-    ^{inputText "lastName" view}
-    ^{errorList "lastName" view}
+  ^{textField "firstName" "First Name" view}
+  ^{textField "lastName" "Last Name" view}
   |]
-
-
-instance ToMarkup (KeyBackend backend entity) where
-  toMarkup (Key id) = [shamlet|#{id}|]
-
-instance ToMarkup PersistValue where
-  toMarkup val = [shamlet|#{render val}|]
-    where render :: PersistValue -> Text
-          render (PersistText t) = t
-          render (PersistByteString bs) = E.decodeUtf8 bs
-          render (PersistInt64 i) = T.pack $ show i
-          render (PersistDouble d) = T.pack $ show d
-          render (PersistBool b) = T.pack $ show b
-          render (PersistDay d) = T.pack $ show d
-          render (PersistTimeOfDay tod) = T.pack $ show tod
-          render (PersistUTCTime utc) = T.pack $ show utc
-          render PersistNull = T.empty
-

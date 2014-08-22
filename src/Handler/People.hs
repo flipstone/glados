@@ -3,21 +3,9 @@ module Handler.People
   ( people
   ) where
 
-import Control.Applicative
-import Control.Monad
-import Database.Persist.Postgresql
-import Happstack.Server
-import Text.Digestive (Formlet, getForm, (.:), string, validate)
-import Text.Digestive.Happstack
-import Text.Hamlet (Html)
-
 import Model
-import App.Types
-import Text.Digestive.Validations
+import Handler.Helpers
 import View.People
-
-(>>.) :: Monad m => m c -> (a -> m b) -> (a -> m b)
-m1 >>. f = \a -> m1 >> f a
 
 people :: App Response
 people = msum [
@@ -71,17 +59,4 @@ personForm :: Monad m => Formlet Html m Person
 personForm p = Person
   <$> "firstName" .: validate notEmpty (string (personFirstName <$> p))
   <*> "lastName" .: validate notEmpty (string (personLastName <$> p))
-
-entityId :: ( PersistEntity entity,
-              PersistEntityBackend entity ~ SqlBackend)
-            => (Entity entity -> App Response) -> App Response
-entityId action = path $ \id -> do
-  result <- runDB $ get id
-
-  case result of
-    Just ent -> action (Entity id ent)
-    Nothing -> notFound $ toResponse ("Not found"::String)
-
-instance FromReqURI (KeyBackend backend entity) where
-  fromReqURI = fmap (Key . PersistInt64) . fromReqURI
 
