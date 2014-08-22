@@ -55,7 +55,7 @@ peopleUpdate ent@(Entity key person) = do
     Nothing ->
       badRequest $ toResponse $ peopleEditView ent view
 
-personForm :: Monad m => Formlet Html m Person
+personForm :: Monad m => Formlet Text m Person
 personForm p = Person
   <$> "firstName" .: validate notEmpty (string (personFirstName <$> p))
   <*> "lastName" .: validate notEmpty (string (personLastName <$> p))

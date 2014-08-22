@@ -1,9 +1,6 @@
 {-# LANGUAGE QuasiQuotes #-}
 module View.Equipment where
 
-import Text.Digestive (View)
-import Text.Hamlet (shamlet, Html)
-
 import Model
 import View.Helpers
 
@@ -23,7 +20,7 @@ equipmentListView equipment = [shamlet|
             <a href="/equipment/edit/#{key}">Edit</a>
   |]
 
-equipmentNewView :: View Html -> Html
+equipmentNewView :: View Text -> Html
 equipmentNewView view = [shamlet|
   <html>
     <body>
@@ -33,7 +30,7 @@ equipmentNewView view = [shamlet|
         <input type="submit" value="save">
   |]
 
-equipmentEditView :: Entity Equipment -> View Html -> Html
+equipmentEditView :: Entity Equipment -> View Text -> Html
 equipmentEditView (Entity id _) view = [shamlet|
   <html>
     <body>
@@ -43,7 +40,7 @@ equipmentEditView (Entity id _) view = [shamlet|
         <input type="submit" value="save">
   |]
 
-equipmentFields :: View Html -> Html
+equipmentFields :: View Text -> Html
 equipmentFields view = [shamlet|
   ^{textField "make" "Make" view}
   ^{textField "model" "Model" view}

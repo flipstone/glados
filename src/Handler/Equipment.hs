@@ -55,7 +55,7 @@ equipmentUpdate ent@(Entity key equipment) = do
     Nothing ->
       badRequest $ toResponse $ equipmentEditView ent view
 
-equipmentForm :: Monad m => Formlet Html m Equipment
+equipmentForm :: Monad m => Formlet Text m Equipment
 equipmentForm e = Equipment
   <$> "make" .: validate notEmpty (string (equipmentMake <$> e))
   <*> "model" .: validate notEmpty (string (equipmentModel <$> e))

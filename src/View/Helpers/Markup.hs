@@ -1,5 +1,7 @@
 {-# LANGUAGE QuasiQuotes #-}
-module View.Helpers.Markup where
+module View.Helpers.Markup
+  ( ToMarkup, toMarkup )
+  where
 
 import Data.Text (Text)
 import qualified Data.Text as T

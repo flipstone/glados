@@ -1,9 +1,6 @@
 {-# LANGUAGE QuasiQuotes        #-}
 module View.People where
 
-import Text.Digestive (View)
-import Text.Hamlet (shamlet, Html)
-
 import Model
 import View.Helpers
 
@@ -21,7 +18,7 @@ peopleListView people = [shamlet|
             <a href="/people/edit/#{key}">Edit</a>
   |]
 
-peopleNewView :: View Html -> Html
+peopleNewView :: View Text -> Html
 peopleNewView view = [shamlet|
   <html>
     <body>
@@ -31,7 +28,7 @@ peopleNewView view = [shamlet|
         <input type="submit" value="save">
   |]
 
-peopleEditView :: Entity Person -> View Html -> Html
+peopleEditView :: Entity Person -> View Text -> Html
 peopleEditView (Entity id _) view = [shamlet|
   <html>
     <body>
@@ -41,7 +38,7 @@ peopleEditView (Entity id _) view = [shamlet|
         <input type="submit" value="save">
   |]
 
-personFields :: View Html -> Html
+personFields :: View Text -> Html
 personFields view = [shamlet|
   ^{textField "firstName" "First Name" view}
   ^{textField "lastName" "Last Name" view}

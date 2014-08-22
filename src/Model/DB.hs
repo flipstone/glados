@@ -6,6 +6,7 @@
 {-# LANGUAGE TypeFamilies       #-}
 module Model.DB where
 
+import Data.Time.Calendar (Day)
 import Database.Persist.TH
 
 share [mkPersist sqlSettings, mkMigrate "migrateAll"] [persistLowerCase|
@@ -18,6 +19,13 @@ Equipment
 Person
   firstName String
   lastName String
+  deriving Show
+PossessionContract
+  personId PersonId
+  equipmentId EquipmentId
+  paymentCents Int Maybe
+  startDate Day
+  expirationDate Day Maybe
   deriving Show
 |]
 

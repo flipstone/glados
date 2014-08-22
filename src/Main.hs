@@ -7,8 +7,9 @@ import Database.Persist.Postgresql
 
 import App.Types
 import Model.DB
-import Handler.People
 import Handler.Equipment
+import Handler.People
+import Handler.PossessionContracts
 
 connString = "host=db port=5432 dbname=glados_dev user=glados password=glados" 
 
@@ -24,6 +25,7 @@ app = do
   msum [
       dir "equipment" equipment
     , dir "people" people
+    , dir "possessionContracts" possessionContracts
     ]
 
 instance BackendHost IO where
