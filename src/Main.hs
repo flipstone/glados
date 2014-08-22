@@ -140,7 +140,7 @@ peopleUpdate ent@(Entity key person) = do
       found ("/people"::String) $ toResponse ("Look over there"::String)
 
     Nothing ->
-      badRequest $ toResponse $ peopleNewView view
+      badRequest $ toResponse $ peopleEditView ent view
 
 personForm :: Monad m => Formlet Html m Person
 personForm p = Person
