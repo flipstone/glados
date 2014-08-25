@@ -16,6 +16,13 @@ people = msum [
   , dir "edit" $ entityId $ methodM GET >>. peopleEdit
   ]
 
+peopleRes :: Resource Person
+peopleRes = defaultResource {
+    resNewView = peopleNewView
+  , resEditView = peopleEditView
+  , resIndexUri = "/people"
+  }
+
 peopleList :: App Response
 peopleList = do
   people <- runDB $ selectList [] [] :: App [Entity Person]
@@ -33,27 +40,13 @@ peopleEdit ent@(Entity key person) = do
 
 peopleCreate :: App Response
 peopleCreate = do
-  (view, result) <- runForm "person" (personForm Nothing)
-
-  case result of
-    Just person -> do
-      runDB $ insert person
-      seeOther ("/people"::String) $ toResponse ("Look over there"::String)
-
-    Nothing ->
-      badRequest $ toResponse $ peopleNewView view
+  post <- runForm "person" (personForm Nothing)
+  handleCreate peopleRes post
 
 peopleUpdate :: Entity Person -> App Response
 peopleUpdate ent@(Entity key person) = do
-  (view, result) <- runForm "person" (personForm (Just person))
-
-  case result of
-    Just person -> do
-      runDB $ replace key person
-      seeOther ("/people"::String) $ toResponse ("Look over there"::String)
-
-    Nothing ->
-      badRequest $ toResponse $ peopleEditView ent view
+  post <- runForm "person" (personForm (Just person))
+  handleUpdate peopleRes ent post
 
 personForm :: Monad m => Formlet Text m Person
 personForm p = Person

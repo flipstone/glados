@@ -20,6 +20,13 @@ possessionContracts = msum [
   , dir "edit" $ entityId $ methodM GET >>. possessionContractsEdit
   ]
 
+possessionContractsRes :: Resource PossessionContract
+possessionContractsRes = defaultResource {
+    resNewView = possessionContractsNewView
+  , resEditView = possessionContractsEditView
+  , resIndexUri = "/possessionContracts"
+  }
+
 possessionContractsList :: App Response
 possessionContractsList = do
   possessionContracts <- runDB $ selectList [] [] :: App [Entity PossessionContract]
@@ -44,27 +51,13 @@ possessionContractsEdit ent@(Entity key possessionContract) = do
 
 possessionContractsCreate :: App Response
 possessionContractsCreate = do
-  (view, result) <- runForm "possessionContract" (possessionContractForm Nothing)
-
-  case result of
-    Just possessionContract -> do
-      runDB $ insert possessionContract
-      seeOther ("/possessionContracts"::String) $ toResponse ("Look over there"::String)
-
-    Nothing ->
-      badRequest $ toResponse $ possessionContractsNewView view
+  post <- runForm "possessionContract" (possessionContractForm Nothing)
+  handleCreate possessionContractsRes post
 
 possessionContractsUpdate :: Entity PossessionContract -> App Response
 possessionContractsUpdate ent@(Entity key possessionContract) = do
-  (view, result) <- runForm "possessionContract" (possessionContractForm (Just possessionContract))
-
-  case result of
-    Just possessionContract -> do
-      runDB $ replace key possessionContract
-      seeOther ("/possessionContracts"::String) $ toResponse ("Look over there"::String)
-
-    Nothing ->
-      badRequest $ toResponse $ possessionContractsEditView ent view
+  post <- runForm "possessionContract" (possessionContractForm (Just possessionContract))
+  handleUpdate possessionContractsRes ent post
 
 possessionContractForm :: Formlet Text App PossessionContract
 possessionContractForm p = monadic $ do

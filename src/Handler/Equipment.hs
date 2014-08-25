@@ -16,6 +16,13 @@ equipment = msum [
   , dir "edit" $ entityId $ methodM GET >>. equipmentEdit
   ]
 
+equipmentRes :: Resource Equipment
+equipmentRes = defaultResource {
+    resNewView = equipmentNewView
+  , resEditView = equipmentEditView
+  , resIndexUri = "/equipment"
+  }
+
 equipmentList :: App Response
 equipmentList = do
   equipment <- runDB $ selectList [] [] :: App [Entity Equipment]
@@ -33,27 +40,13 @@ equipmentEdit ent@(Entity key equipment) = do
 
 equipmentCreate :: App Response
 equipmentCreate = do
-  (view, result) <- runForm "equipment" (equipmentForm Nothing)
-
-  case result of
-    Just equipment -> do
-      runDB $ insert equipment
-      seeOther ("/equipment"::String) $ toResponse ("Look over there"::String)
-
-    Nothing ->
-      badRequest $ toResponse $ equipmentNewView view
+  post <- runForm "equipment" (equipmentForm Nothing)
+  handleCreate equipmentRes post
 
 equipmentUpdate :: Entity Equipment -> App Response
 equipmentUpdate ent@(Entity key equipment) = do
-  (view, result) <- runForm "equipment" (equipmentForm (Just equipment))
-
-  case result of
-    Just equipment -> do
-      runDB $ replace key equipment
-      seeOther ("/equipment"::String) $ toResponse ("Look over there"::String)
-
-    Nothing ->
-      badRequest $ toResponse $ equipmentEditView ent view
+  post <- runForm "equipment" (equipmentForm (Just equipment))
+  handleUpdate equipmentRes ent post
 
 equipmentForm :: Monad m => Formlet Text m Equipment
 equipmentForm e = Equipment

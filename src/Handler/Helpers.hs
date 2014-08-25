@@ -10,6 +10,7 @@ module Handler.Helpers
   , module App.Types
   , module Database.Associations
   , module Handler.Helpers.Form
+  , module Handler.Helpers.Resource
   , module Handler.Helpers.Routing
   , module Text.Digestive.Validations
   ) where
@@ -25,5 +26,6 @@ import Text.Hamlet (Html)
 import App.Types
 import Database.Associations
 import Handler.Helpers.Form
+import Handler.Helpers.Resource
 import Handler.Helpers.Routing
 import Text.Digestive.Validations
