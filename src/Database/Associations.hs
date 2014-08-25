@@ -4,9 +4,11 @@ module Database.Associations
   , loadAssociations
   , own
   , belongsTos
+  , hasManys
   ) where
 
 import Control.Applicative
+import Data.List (foldl')
 import qualified Data.Map.Strict as Map
 import Database.Persist
 
@@ -59,13 +61,53 @@ belongsTos keyField foreignKeyField = AssociationLoader $ \entities -> do
 
 
 ------------------------------------------------------------
+hasManys :: (PersistEntity foreignEnt,
+             PersistMonadBackend m ~ PersistEntityBackend foreignEnt,
+             PersistQuery m)
+         => EntityField foreignEnt (Key ent)
+         -> (foreignEnt -> Key ent)
+         -> AssociationLoader m (Entity ent) [Entity foreignEnt]
+hasManys keyField keyFunc = AssociationLoader $ \entities -> do
+  let keys = map entityKey entities
+      prepend ent _ ents = ent : ents
+      ownerId ent@(Entity _ val) = (keyFunc val, [ent])
+
+  foreigns <- selectMapBy ownerId
+                          prepend
+                          [keyField <-. keys]
+                          []
+
+  let findForeign pId = Map.findWithDefault [] pId foreigns
+
+  return $ map findForeign keys
+
+------------------------------------------------------------
 selectMap :: (PersistEntity val, PersistQuery m, PersistEntityBackend val ~ PersistMonadBackend m)
           => [Filter val]
           -> [SelectOpt val]
           -> m (Map.Map (Key val) val)
-selectMap f o = do list <- selectList f o
-                   return (makeMap list)
-  where makeMap = Map.fromList . map toPair
-        toPair (Entity key val) = (key, val)
+selectMap = selectMapBy keyVal firstIn
+  where keyVal (Entity key val) = (key, val)
+        firstIn _ _ val = val
 
+
+selectMapBy :: (PersistEntity val,
+                PersistQuery m,
+                PersistEntityBackend val ~ PersistMonadBackend m,
+                Ord a)
+            => (Entity val -> (a,b))
+            -> (Entity val -> b -> b -> b)
+            -> [Filter val]
+            -> [SelectOpt val]
+            -> m (Map.Map a b)
+selectMapBy extract resolve filter opts =
+     do list <- selectList filter opts
+        return (makeMap list)
+
+  where makeMap = foldl' insertEnt Map.empty
+        insertEnt map ent = let (k,v) = extract ent
+                            in Map.insertWith (resolve ent)
+                                              k
+                                              v
+                                              map
 

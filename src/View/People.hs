@@ -5,16 +5,24 @@ import Model
 import View.Helpers
 import View.Layout
 
-peopleListView :: [Entity Person] -> Html
+data PersonView = PersonView {
+    person :: Entity Person
+  , contracts :: [Entity PossessionContract]
+  }
+
+peopleListView :: [PersonView] -> Html
 peopleListView people = layout [shamlet|
   <a href="/people/new">Add a Person</a>
   <ul>
-    $forall Entity key p <- people
-      <li>
-        #{personFirstName p}
-        #{personLastName p}
+    $forall view <- people
+      $with Entity key p <- person view
+        <li>
+          #{personFirstName p}
+          #{personLastName p}
 
-        <a href="/people/edit/#{key}">Edit</a>
+          <a href="/people/edit/#{key}">Edit</a>
+
+          (#{length $ contracts view} contracts)
   |]
 
 peopleNewView :: View Text -> Html

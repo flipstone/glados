@@ -26,7 +26,13 @@ peopleRes = defaultResource {
 peopleList :: App Response
 peopleList = do
   people <- runDB $ selectList [] [] :: App [Entity Person]
-  ok $ toResponse $ peopleListView people
+  personViews <- runDB $
+    loadAssociations people $
+      PersonView
+      <$> own id
+      <*> hasManys PossessionContractPersonId possessionContractPersonId
+
+  ok $ toResponse $ peopleListView personViews
 
 peopleNew :: App Response
 peopleNew = do
