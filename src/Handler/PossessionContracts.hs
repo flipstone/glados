@@ -12,13 +12,13 @@ import Handler.Helpers
 import View.PossessionContracts
 
 possessionContracts :: App Response
-possessionContracts = msum [
-    methodM GET >> possessionContractsList
-  , methodM POST >> possessionContractsCreate
-  , entityId $ methodM POST >>. possessionContractsUpdate
-  , dir "new" $ methodM GET >> possessionContractsNew
-  , dir "edit" $ entityId $ methodM GET >>. possessionContractsEdit
-  ]
+possessionContracts = routeResource $ ResourceActions {
+    resActionList = possessionContractsList
+  , resActionNew = possessionContractsNew
+  , resActionEdit = possessionContractsEdit
+  , resActionCreate = possessionContractsCreate
+  , resActionUpdate = possessionContractsUpdate
+  }
 
 possessionContractsRes :: Resource PossessionContract
 possessionContractsRes = defaultResource {

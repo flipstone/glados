@@ -8,13 +8,13 @@ import Model
 import View.Equipment
 
 equipment :: App Response
-equipment = msum [
-    methodM GET >> equipmentList
-  , methodM POST >> equipmentCreate
-  , entityId $ methodM POST >>. equipmentUpdate
-  , dir "new" $ methodM GET >> equipmentNew
-  , dir "edit" $ entityId $ methodM GET >>. equipmentEdit
-  ]
+equipment = routeResource $ ResourceActions {
+    resActionList = equipmentList
+  , resActionNew = equipmentNew
+  , resActionEdit = equipmentEdit
+  , resActionCreate = equipmentCreate
+  , resActionUpdate = equipmentUpdate
+  }
 
 equipmentRes :: Resource Equipment
 equipmentRes = defaultResource {

@@ -6,9 +6,6 @@ import Happstack.Server
 
 import App.Types
 
-(>>.) :: Monad m => m c -> (a -> m b) -> (a -> m b)
-m1 >>. f = \a -> m1 >> f a
-
 entityId :: ( PersistEntity entity,
               PersistEntityBackend entity ~ SqlBackend)
             => (Entity entity -> App Response) -> App Response

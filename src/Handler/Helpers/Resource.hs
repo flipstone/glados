@@ -1,6 +1,7 @@
 {-# LANGUAGE GADTs #-}
 module Handler.Helpers.Resource where
 
+import Control.Monad (msum)
 import Data.Text (Text)
 import Database.Persist
 import Database.Persist.Postgresql
@@ -9,6 +10,26 @@ import Text.Digestive (Form, Formlet, View)
 import Text.Hamlet (Html)
 
 import App.Types
+import Handler.Helpers.Routing
+
+data ResourceActions a = ResourceActions {
+    resActionList :: App Response
+  , resActionNew :: App Response
+  , resActionEdit :: Entity a -> App Response
+  , resActionCreate :: App Response
+  , resActionUpdate :: Entity a -> App Response
+  }
+
+routeResource :: ( PersistEntity a,
+                   PersistEntityBackend a ~ SqlBackend)
+              => ResourceActions a -> App Response
+routeResource actions = msum [
+    methodM GET >> resActionList actions
+  , methodM POST >> resActionCreate actions
+  , entityId $ (\ent -> methodM POST >> resActionUpdate actions ent)
+  , dir "new" $ methodM GET >> resActionNew actions
+  , dir "edit" $ entityId $ (\ent -> methodM GET >> resActionEdit actions ent)
+  ]
 
 data Resource a = Resource {
     resCreate :: a -> AppBackend (Key a)

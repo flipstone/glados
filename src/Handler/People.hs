@@ -8,13 +8,13 @@ import Handler.Helpers
 import View.People
 
 people :: App Response
-people = msum [
-    methodM GET >> peopleList
-  , methodM POST >> peopleCreate
-  , entityId $ methodM POST >>. peopleUpdate
-  , dir "new" $ methodM GET >> peopleNew
-  , dir "edit" $ entityId $ methodM GET >>. peopleEdit
-  ]
+people = routeResource $ ResourceActions {
+    resActionList = peopleList
+  , resActionNew = peopleNew
+  , resActionEdit = peopleEdit
+  , resActionCreate = peopleCreate
+  , resActionUpdate = peopleUpdate
+  }
 
 peopleRes :: Resource Person
 peopleRes = defaultResource {
