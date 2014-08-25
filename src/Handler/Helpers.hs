@@ -8,6 +8,7 @@ module Handler.Helpers
   , module Text.Hamlet
 
   , module App.Types
+  , module Database.Associations
   , module Handler.Helpers.Form
   , module Handler.Helpers.Routing
   , module Text.Digestive.Validations
@@ -22,6 +23,7 @@ import Text.Digestive.Happstack
 import Text.Hamlet (Html)
 
 import App.Types
+import Database.Associations
 import Handler.Helpers.Form
 import Handler.Helpers.Routing
 import Text.Digestive.Validations

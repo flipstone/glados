@@ -19,9 +19,10 @@ cabal-version:       >=1.10
 executable glados
   main-is:             Main.hs
   -- other-modules:
-  extensions:          OverloadedStrings
+  default-extensions:  OverloadedStrings
   build-depends:       base >=4.6 && <4.7,
-                       blaze-html ==0.7.0.2,
+                       blaze-html == 0.7.0.2,
+                       containers == 0.5.0.0,
                        digestive-functors == 0.7.1.1,
                        digestive-functors-blaze == 0.6.0.4,
                        digestive-functors-happstack == 0.6.1.0,

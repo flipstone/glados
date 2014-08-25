@@ -23,7 +23,14 @@ possessionContracts = msum [
 possessionContractsList :: App Response
 possessionContractsList = do
   possessionContracts <- runDB $ selectList [] [] :: App [Entity PossessionContract]
-  ok $ toResponse $ possessionContractsListView possessionContracts
+  possessionContractViews <- runDB $
+    loadAssociations possessionContracts $
+      PossessionContractView
+      <$> theEntity
+      <*> belongsTos PersonId possessionContractPersonId
+      <*> belongsTos EquipmentId possessionContractEquipmentId
+
+  ok $ toResponse $ possessionContractsListView possessionContractViews
 
 possessionContractsNew :: App Response
 possessionContractsNew = do

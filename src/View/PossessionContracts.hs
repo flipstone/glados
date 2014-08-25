@@ -4,15 +4,25 @@ module View.PossessionContracts where
 import Model
 import View.Helpers
 
-possessionContractsListView :: [Entity PossessionContract] -> Html
+data PossessionContractView = PossessionContractView {
+    possessionContract :: PossessionContract
+  , person :: Person
+  , equipment :: Equipment
+  } deriving Show
+
+possessionContractsListView :: [(Key PossessionContract, PossessionContractView)]
+                            -> Html
 possessionContractsListView possessionContracts = [shamlet|
   <html>
     <body>
       <a href="/possessionContracts/new">Add a PossessionContract</a>
       <ul>
-        $forall Entity key p <- possessionContracts
+        $forall (key,p) <- possessionContracts
           <li>
-            Possession Contract #{key}
+            #{personFirstName $ person p}
+            #{personLastName $ person p}'s
+            #{equipmentMake $ equipment p}
+            #{equipmentModel $ equipment p}
 
             <a href="/possessionContracts/edit/#{key}">Edit</a>
   |]
