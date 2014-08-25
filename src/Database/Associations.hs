@@ -22,21 +22,20 @@ data AssociationLoader m ent foreignEnt = AssociationLoader {
     runLoader :: [ent] -> m [foreignEnt]
   }
 
-instance Monad m => Functor (AssociationLoader m ent) where
-  fmap f loader = AssociationLoader $ \entities -> do
-                    foreignEntities <- runLoader loader entities
-                    return $ map f foreignEntities
+instance Functor m => Functor (AssociationLoader m ent) where
+  fmap f loader = AssociationLoader $ \entities ->
+                    map f <$> runLoader loader entities
 
-instance Monad m => Applicative (AssociationLoader m ent) where
-  pure a = AssociationLoader $ const (return $ repeat a)
-  fLoader <*> argLoader = AssociationLoader $ \entities -> do
-                            fs <- runLoader fLoader entities
-                            args <- runLoader argLoader entities
-                            return (zipWith ($) fs args)
+instance Applicative m => Applicative (AssociationLoader m ent) where
+  pure a = AssociationLoader $ const (pure $ repeat a)
+  fLoader <*> argLoader = AssociationLoader $ \entities ->
+                                zipWith ($)
+                            <$> runLoader fLoader entities
+                            <*> runLoader argLoader entities
 
 ------------------------------------------------------------
-own :: Monad m => (ent -> a) -> AssociationLoader m ent a
-own f = AssociationLoader (return . map f)
+own :: Applicative m => (ent -> a) -> AssociationLoader m ent a
+own f = AssociationLoader (pure . map f)
 
 
 ------------------------------------------------------------
