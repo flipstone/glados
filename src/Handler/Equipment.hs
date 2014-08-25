@@ -38,7 +38,7 @@ equipmentCreate = do
   case result of
     Just equipment -> do
       runDB $ insert equipment
-      found ("/equipment"::String) $ toResponse ("Look over there"::String)
+      seeOther ("/equipment"::String) $ toResponse ("Look over there"::String)
 
     Nothing ->
       badRequest $ toResponse $ equipmentNewView view
@@ -50,7 +50,7 @@ equipmentUpdate ent@(Entity key equipment) = do
   case result of
     Just equipment -> do
       runDB $ replace key equipment
-      found ("/equipment"::String) $ toResponse ("Look over there"::String)
+      seeOther ("/equipment"::String) $ toResponse ("Look over there"::String)
 
     Nothing ->
       badRequest $ toResponse $ equipmentEditView ent view

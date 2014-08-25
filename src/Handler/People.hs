@@ -38,7 +38,7 @@ peopleCreate = do
   case result of
     Just person -> do
       runDB $ insert person
-      found ("/people"::String) $ toResponse ("Look over there"::String)
+      seeOther ("/people"::String) $ toResponse ("Look over there"::String)
 
     Nothing ->
       badRequest $ toResponse $ peopleNewView view
@@ -50,7 +50,7 @@ peopleUpdate ent@(Entity key person) = do
   case result of
     Just person -> do
       runDB $ replace key person
-      found ("/people"::String) $ toResponse ("Look over there"::String)
+      seeOther ("/people"::String) $ toResponse ("Look over there"::String)
 
     Nothing ->
       badRequest $ toResponse $ peopleEditView ent view

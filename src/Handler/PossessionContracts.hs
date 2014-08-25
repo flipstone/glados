@@ -49,7 +49,7 @@ possessionContractsCreate = do
   case result of
     Just possessionContract -> do
       runDB $ insert possessionContract
-      found ("/possessionContracts"::String) $ toResponse ("Look over there"::String)
+      seeOther ("/possessionContracts"::String) $ toResponse ("Look over there"::String)
 
     Nothing ->
       badRequest $ toResponse $ possessionContractsNewView view
@@ -61,7 +61,7 @@ possessionContractsUpdate ent@(Entity key possessionContract) = do
   case result of
     Just possessionContract -> do
       runDB $ replace key possessionContract
-      found ("/possessionContracts"::String) $ toResponse ("Look over there"::String)
+      seeOther ("/possessionContracts"::String) $ toResponse ("Look over there"::String)
 
     Nothing ->
       badRequest $ toResponse $ possessionContractsEditView ent view
