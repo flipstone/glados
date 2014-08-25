@@ -6,24 +6,24 @@ import View.Helpers
 import View.Layout
 
 data PossessionContractView = PossessionContractView {
-    possessionContract :: PossessionContract
+    possessionContractKey :: Key PossessionContract
   , person :: Person
   , equipment :: Equipment
   } deriving Show
 
-possessionContractsListView :: [(Key PossessionContract, PossessionContractView)]
+possessionContractsListView :: [PossessionContractView]
                             -> Html
 possessionContractsListView possessionContracts = layout [shamlet|
   <a href="/possessionContracts/new">Add a PossessionContract</a>
   <ul>
-    $forall (key,p) <- possessionContracts
+    $forall pc <- possessionContracts
       <li>
-        #{personFirstName $ person p}
-        #{personLastName $ person p}'s
-        #{equipmentMake $ equipment p}
-        #{equipmentModel $ equipment p}
+        #{personFirstName $ person pc}
+        #{personLastName $ person pc}'s
+        #{equipmentMake $ equipment pc}
+        #{equipmentModel $ equipment pc}
 
-        <a href="/possessionContracts/edit/#{key}">Edit</a>
+        <a href="/possessionContracts/edit/#{possessionContractKey pc}">Edit</a>
   |]
 
 possessionContractsNewView :: View Text -> Html

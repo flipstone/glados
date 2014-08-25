@@ -2,7 +2,7 @@
 module Database.Associations
   ( AssociationLoader
   , loadAssociations
-  , theEntity
+  , own
   , belongsTos
   ) where
 
@@ -12,14 +12,10 @@ import Database.Persist
 
 ------------------------------------------------------------
 loadAssociations :: (Monad m)
-                 => [Entity ent]
+                 => [ent]
                  -> AssociationLoader m ent associatedEnt
-                 -> m [(Key ent, associatedEnt)]
-loadAssociations entities loader = do
-    associated <- runLoader loader (map entityVal entities)
-    return $ zipWith pairUp entities associated
-  where pairUp (Entity key _) v = (key, v)
-
+                 -> m [associatedEnt]
+loadAssociations = flip runLoader
 
 ------------------------------------------------------------
 data AssociationLoader m ent foreignEnt = AssociationLoader {
@@ -39,8 +35,8 @@ instance Monad m => Applicative (AssociationLoader m ent) where
                             return (zipWith ($) fs args)
 
 ------------------------------------------------------------
-theEntity :: Monad m => AssociationLoader m ent ent
-theEntity = AssociationLoader return
+own :: Monad m => (ent -> a) -> AssociationLoader m ent a
+own f = AssociationLoader (return . map f)
 
 
 ------------------------------------------------------------
@@ -49,9 +45,9 @@ belongsTos :: (PersistEntity foreignEnt,
                PersistQuery m)
            => EntityField foreignEnt (Key foreignEnt)
            -> (a -> Key foreignEnt)
-           -> AssociationLoader m a foreignEnt
+           -> AssociationLoader m (Entity a) foreignEnt
 belongsTos keyField foreignKeyField = AssociationLoader $ \entities -> do
-  let foreignKeys = map foreignKeyField entities
+  let foreignKeys = map (foreignKeyField . entityVal) entities
 
   foreigns <- selectMap [keyField <-. foreignKeys] []
 
@@ -60,9 +56,7 @@ belongsTos keyField foreignKeyField = AssociationLoader $ \entities -> do
                         Just ent -> ent
                         _ -> missingError
 
-      resolve = findForeign . foreignKeyField
-
-  return $ map resolve entities
+  return $ map findForeign foreignKeys
 
 
 ------------------------------------------------------------

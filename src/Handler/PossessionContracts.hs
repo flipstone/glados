@@ -33,7 +33,7 @@ possessionContractsList = do
   possessionContractViews <- runDB $
     loadAssociations possessionContracts $
       PossessionContractView
-      <$> theEntity
+      <$> own entityKey
       <*> belongsTos PersonId possessionContractPersonId
       <*> belongsTos EquipmentId possessionContractEquipmentId
 
@@ -66,10 +66,10 @@ possessionContractForm p = monadic $ do
 
   return $ possessionContractFormPure people equipment p
 
-possessionContractFormPure  :: Monad m =>
-                               [Entity Person] ->
-                               [Entity Equipment] ->
-                               Formlet Text m PossessionContract
+possessionContractFormPure  :: Monad m
+                            => [Entity Person]
+                            -> [Entity Equipment]
+                            -> Formlet Text m PossessionContract
 possessionContractFormPure people equipment p = PossessionContract
   <$> "personId" .: foreignKey people (possessionContractPersonId <$> p)
   <*> "equipmentId" .: foreignKey equipment (possessionContractEquipmentId <$> p)
