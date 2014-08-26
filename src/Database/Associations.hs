@@ -12,6 +12,7 @@ module Database.Associations
 import Control.Applicative
 import Data.List (foldl', nub)
 import qualified Data.Map.Strict as Map
+import qualified Data.Text as T
 import Database.Persist
 
 ------------------------------------------------------------
@@ -44,12 +45,14 @@ own f = AssociationLoader (pure . map f)
 
 ------------------------------------------------------------
 belongsTos :: (PersistEntity foreignEnt,
+               PersistEntity a,
                PersistMonadBackend m ~ PersistEntityBackend foreignEnt,
                PersistQuery m)
-           => (a -> Key foreignEnt)
+           => EntityField a (Key foreignEnt)
            -> AssociationLoader m (Entity a) (Entity foreignEnt)
 belongsTos foreignKeyField = AssociationLoader $ \entities -> do
-  let foreignKeys = map (foreignKeyField . entityVal) entities
+  let keyFunc = Key . lookupFieldValue foreignKeyField . entityVal
+      foreignKeys = map keyFunc entities
 
   foreigns <- selectMap [persistIdField <-. nub foreignKeys] []
 
@@ -66,11 +69,11 @@ hasManys :: (PersistEntity foreignEnt,
              PersistMonadBackend m ~ PersistEntityBackend foreignEnt,
              PersistQuery m)
          => EntityField foreignEnt (Key ent)
-         -> (foreignEnt -> Key ent)
          -> AssociationLoader m (Entity ent) [Entity foreignEnt]
-hasManys keyField keyFunc = AssociationLoader $ \entities -> do
+hasManys keyField = AssociationLoader $ \entities -> do
   let keys = map entityKey entities
       prepend ent _ ents = ent : ents
+      keyFunc = Key . lookupFieldValue keyField
       ownerId ent@(Entity _ val) = (keyFunc val, [ent])
 
   foreigns <- selectMapBy ownerId
@@ -111,6 +114,24 @@ throughMany foreignLoader joinLoader =
     recollect (as:moreAs) bs = let n = length as
                                    (these, rest) = splitAt n bs
                                in these : recollect moreAs rest
+
+------------------------------------------------------------
+lookupFieldValue :: (PersistEntity ent)
+                 => EntityField ent a
+                 -> ent
+                 -> PersistValue
+lookupFieldValue field ent =
+    case lookup name pairs of
+    Just val -> val
+    _ -> error $ "Unable to find " ++ fieldName ++ " for " ++ entityName
+  where
+    name = fieldHaskell $ persistFieldDef field
+    pairs = names `zip` values
+    names = fieldHaskell <$> entityFields def
+    values = toPersistValue <$> toPersistFields ent
+    def = entityDef [ent]
+    entityName = T.unpack $ unHaskellName (entityHaskell def)
+    fieldName = T.unpack $ unHaskellName name
 
 ------------------------------------------------------------
 selectMap :: (PersistEntity val, PersistQuery m, PersistEntityBackend val ~ PersistMonadBackend m)
