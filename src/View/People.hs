@@ -7,7 +7,7 @@ import View.Layout
 
 data PersonView = PersonView {
     person :: Entity Person
-  , contracts :: [Entity PossessionContract]
+  , equipments :: [Entity Equipment]
   }
 
 peopleListView :: [PersonView] -> Html
@@ -22,7 +22,11 @@ peopleListView people = layout [shamlet|
 
           <a href="/people/edit/#{key}">Edit</a>
 
-          (#{length $ contracts view} contracts)
+          <ul>
+            $forall Entity _ e <- equipments view
+              <li>
+                #{equipmentMake e}
+                #{equipmentModel e}
   |]
 
 peopleNewView :: View Text -> Html

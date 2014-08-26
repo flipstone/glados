@@ -5,10 +5,12 @@ module Database.Associations
   , own
   , belongsTos
   , hasManys
+  , through
+  , throughMany
   ) where
 
 import Control.Applicative
-import Data.List (foldl')
+import Data.List (foldl', nub)
 import qualified Data.Map.Strict as Map
 import Database.Persist
 
@@ -46,15 +48,15 @@ belongsTos :: (PersistEntity foreignEnt,
                PersistQuery m)
            => EntityField foreignEnt (Key foreignEnt)
            -> (a -> Key foreignEnt)
-           -> AssociationLoader m (Entity a) foreignEnt
+           -> AssociationLoader m (Entity a) (Entity foreignEnt)
 belongsTos keyField foreignKeyField = AssociationLoader $ \entities -> do
   let foreignKeys = map (foreignKeyField . entityVal) entities
 
-  foreigns <- selectMap [keyField <-. foreignKeys] []
+  foreigns <- selectMap [keyField <-. nub foreignKeys] []
 
   let missingError = error "Missing foreign entity! Your DB should be enforcing foreign keys"
-      findForeign pId = case Map.lookup pId foreigns of
-                        Just ent -> ent
+      findForeign fId = case Map.lookup fId foreigns of
+                        Just ent -> Entity fId ent
                         _ -> missingError
 
   return $ map findForeign foreignKeys
@@ -74,12 +76,42 @@ hasManys keyField keyFunc = AssociationLoader $ \entities -> do
 
   foreigns <- selectMapBy ownerId
                           prepend
-                          [keyField <-. keys]
+                          [keyField <-. nub keys]
                           []
 
   let findForeign pId = Map.findWithDefault [] pId foreigns
 
   return $ map findForeign keys
+
+
+------------------------------------------------------------
+through :: Monad m =>
+           AssociationLoader m join foreignEnt
+        -> AssociationLoader m ent join
+        -> AssociationLoader m ent foreignEnt
+through foreignLoader joinLoader =
+  AssociationLoader $ \entities -> do
+    joinEnts <- runLoader joinLoader entities
+    runLoader foreignLoader joinEnts
+
+------------------------------------------------------------
+throughMany :: Monad m =>
+               AssociationLoader m join foreignEnt
+            -> AssociationLoader m ent [join]
+            -> AssociationLoader m ent [foreignEnt]
+throughMany foreignLoader joinLoader =
+    AssociationLoader $ \entities -> do
+      joinEnts <- runLoader joinLoader entities
+      foreignEnts <- runLoader foreignLoader (concat joinEnts)
+      return (recollect joinEnts foreignEnts)
+  where
+    -- recollect the flattened entities back into
+    -- the lists of many relationships.
+    recollect :: [[a]] -> [b] -> [[b]]
+    recollect [] _ = []
+    recollect (as:moreAs) bs = let n = length as
+                                   (these, rest) = splitAt n bs
+                               in these : recollect moreAs rest
 
 ------------------------------------------------------------
 selectMap :: (PersistEntity val, PersistQuery m, PersistEntityBackend val ~ PersistMonadBackend m)

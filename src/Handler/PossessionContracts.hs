@@ -34,8 +34,8 @@ possessionContractsList = do
     loadAssociations possessionContracts $
       PossessionContractView
       <$> own entityKey
-      <*> belongsTos PersonId possessionContractPersonId
-      <*> belongsTos EquipmentId possessionContractEquipmentId
+      <*> (entityVal <$> belongsTos PersonId possessionContractPersonId)
+      <*> (entityVal <$> belongsTos EquipmentId possessionContractEquipmentId)
 
   ok $ toResponse $ possessionContractsListView possessionContractViews
 

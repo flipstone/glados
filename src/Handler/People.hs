@@ -30,7 +30,9 @@ peopleList = do
     loadAssociations people $
       PersonView
       <$> own id
-      <*> hasManys PossessionContractPersonId possessionContractPersonId
+      <*> ( belongsTos EquipmentId possessionContractEquipmentId
+            `throughMany`
+            hasManys PossessionContractPersonId possessionContractPersonId)
 
   ok $ toResponse $ peopleListView personViews
 
