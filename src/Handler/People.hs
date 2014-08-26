@@ -30,7 +30,7 @@ peopleList = do
     loadAssociations people $
       PersonView
       <$> own id
-      <*> ( belongsTos EquipmentId possessionContractEquipmentId
+      <*> ( belongsTos possessionContractEquipmentId
             `throughMany`
             hasManys PossessionContractPersonId possessionContractPersonId)
 

@@ -46,13 +46,12 @@ own f = AssociationLoader (pure . map f)
 belongsTos :: (PersistEntity foreignEnt,
                PersistMonadBackend m ~ PersistEntityBackend foreignEnt,
                PersistQuery m)
-           => EntityField foreignEnt (Key foreignEnt)
-           -> (a -> Key foreignEnt)
+           => (a -> Key foreignEnt)
            -> AssociationLoader m (Entity a) (Entity foreignEnt)
-belongsTos keyField foreignKeyField = AssociationLoader $ \entities -> do
+belongsTos foreignKeyField = AssociationLoader $ \entities -> do
   let foreignKeys = map (foreignKeyField . entityVal) entities
 
-  foreigns <- selectMap [keyField <-. nub foreignKeys] []
+  foreigns <- selectMap [persistIdField <-. nub foreignKeys] []
 
   let missingError = error "Missing foreign entity! Your DB should be enforcing foreign keys"
       findForeign fId = case Map.lookup fId foreigns of
