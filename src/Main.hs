@@ -10,8 +10,10 @@ import Model.DB
 import Handler.Equipment
 import Handler.People
 import Handler.PossessionContracts
+import Handler.Agreement
 import Handler.Fob
 import Handler.FobAssignments
+import Handler.Doors
 
 connString = "host=db port=5432 dbname=glados_dev user=glados password=glados"
 
@@ -25,9 +27,11 @@ app :: App Response
 app = do
   decodeBody $ defaultBodyPolicy "/tmp/" 4096 4096 4096
   msum [
-      dir "equipment" equipment
+      dir "doors" doors
+    , dir "equipment" equipment
     , dir "people" people
     , dir "possessionContracts" possessionContracts
+    , dir "agreement" agreement
     , dir "fob" fob
     , dir "fobAssignments" fobAssignments
     ]
