@@ -30,5 +30,8 @@ PossessionContract
   startDate Day
   expirationDate Day Maybe
   deriving Show
+Door
+  name String
+  deriving Show
 |]
 
