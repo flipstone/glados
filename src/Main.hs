@@ -10,6 +10,7 @@ import Model.DB
 import Handler.Equipment
 import Handler.People
 import Handler.PossessionContracts
+import Handler.Agreement
 
 connString = "host=db port=5432 dbname=glados_dev user=glados password=glados" 
 
@@ -26,6 +27,7 @@ app = do
       dir "equipment" equipment
     , dir "people" people
     , dir "possessionContracts" possessionContracts
+    , dir "agreement" agreement
     ]
 
 instance BackendHost IO where

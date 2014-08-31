@@ -27,5 +27,9 @@ PossessionContract
   startDate Day
   expirationDate Day Maybe
   deriving Show
+Agreement
+  name String
+  author String
+  version Int
 |]
 
