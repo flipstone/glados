@@ -12,6 +12,7 @@ layout body = [shamlet|
         <a href="/equipment">Equipment
         <a href="/possessionContracts">Possession Contracts
         <a href="/fob">Fob
+        <a href="/fobAssignments">Fob Assignments
       <div>
         ^{body}
   |]

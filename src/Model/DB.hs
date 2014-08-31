@@ -19,6 +19,11 @@ Equipment
 Fob
   key String
   deriving Show
+FobAssignment
+  personId PersonId
+  fobId FobId
+  startDate Day
+  expirationDate Day Maybe
 Person
   firstName String
   lastName String

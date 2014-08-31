@@ -11,6 +11,7 @@ import Handler.Equipment
 import Handler.People
 import Handler.PossessionContracts
 import Handler.Fob
+import Handler.FobAssignments
 
 connString = "host=db port=5432 dbname=glados_dev user=glados password=glados"
 
@@ -28,6 +29,7 @@ app = do
     , dir "people" people
     , dir "possessionContracts" possessionContracts
     , dir "fob" fob
+    , dir "fobAssignments" fobAssignments
     ]
 
 instance BackendHost IO where
