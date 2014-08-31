@@ -14,11 +14,13 @@ doors = routeResource $ (ResourceActions {
   , resActionCreate = doorsCreate
   , resActionEdit = doorsEdit
   , resActionUpdate = doorsUpdate
-} :: ResourceActions Door)
+})
 
 doorsRes :: Resource Door
 doorsRes = defaultResource {
-  resIndexUri = "/doors"
+    resIndexUri = "/doors"
+  , resNewView = doorsNewView
+  , resEditView = doorsEditView
 }
 
 doorsEdit :: Entity Door -> App Response
