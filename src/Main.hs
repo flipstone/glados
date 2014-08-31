@@ -10,8 +10,9 @@ import Model.DB
 import Handler.Equipment
 import Handler.People
 import Handler.PossessionContracts
+import Handler.Fob
 
-connString = "host=db port=5432 dbname=glados_dev user=glados password=glados" 
+connString = "host=db port=5432 dbname=glados_dev user=glados password=glados"
 
 main = do
   withPostgresqlPool connString 5 $ \pool -> do
@@ -26,6 +27,7 @@ app = do
       dir "equipment" equipment
     , dir "people" people
     , dir "possessionContracts" possessionContracts
+    , dir "fob" fob
     ]
 
 instance BackendHost IO where

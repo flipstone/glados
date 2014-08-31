@@ -16,6 +16,9 @@ Equipment
   serialNumber String Maybe
   replacementCost Int Maybe
   deriving Show
+Fob
+  key String
+  deriving Show
 Person
   firstName String
   lastName String
