@@ -42,5 +42,8 @@ Agreement
 Door
   name String
   deriving Show
+DoorKey
+  doorId DoorId
+  personId PersonId
 |]
 

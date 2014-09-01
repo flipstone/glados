@@ -14,6 +14,7 @@ import Handler.Agreement
 import Handler.Fob
 import Handler.FobAssignments
 import Handler.Doors
+import Handler.DoorKeys
 
 connString = "host=db port=5432 dbname=glados_dev user=glados password=glados"
 
@@ -28,6 +29,7 @@ app = do
   decodeBody $ defaultBodyPolicy "/tmp/" 4096 4096 4096
   msum [
       dir "doors" doors
+    , dir "doorkeys" doorKeys
     , dir "equipment" equipment
     , dir "people" people
     , dir "possessionContracts" possessionContracts
