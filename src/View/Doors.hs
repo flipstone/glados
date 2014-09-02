@@ -23,7 +23,7 @@ doorsListView doors = layout [shamlet|
 
 doorsNewView :: View Text -> Html
 doorsNewView view = layout [shamlet|
-  <form action="/door/" method="POST">
+  <form action="/doors" method="POST">
     ^{doorsFields view}
 
     <input type="submit" value="save">
