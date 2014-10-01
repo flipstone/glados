@@ -18,9 +18,9 @@ import Handler.FobAssignments
 import Handler.People
 import Handler.PossessionContracts
 import Handler.Open
+import Handler.Style
+import Handler.Welcome
 import Model.DB
-
-connString = "host=db port=5432 dbname=glados_dev user=glados password=glados"
 
 main :: IO ()
 main = getEnvironment >>= runServer
@@ -49,10 +49,17 @@ app = do
     , dir "agreements" agreements
     , dir "fobs" fobs
     , dir "fobAssignments" fobAssignments
+    , dir "style" style
+    , welcome
     ]
 
 instance BackendHost IO where
   runDB action = do
-    withPostgresqlPool connString 1 $ \pool -> do
-      runBackendPool pool action
+    dbConfig <- loadDBConfig
+
+    runEnvOrCrash Development $ do
+      connString <- getForEnv dbConfig
+      return $
+        withPostgresqlPool connString 1 $ \pool -> do
+          runBackendPool pool action
 

@@ -6,8 +6,12 @@ import View.Helpers
 layout :: Html -> Html
 layout body = [shamlet|
   <html>
+    <head>
+      <title>GlaDOS
+      <link rel="stylesheet" href="/style/main.css" type="text/css">
     <body>
-      <div>
+      <div class="navbar">
+        <a href="/">Home
         <a href="/people">People
         <a href="/equipment">Equipment
         <a href="/doors">Doors
@@ -16,6 +20,6 @@ layout body = [shamlet|
         <a href="/agreements">Agreements
         <a href="/fobs">Fobs
         <a href="/fobAssignments">Fob Assignments
-      <div>
+      <div class="container">
         ^{body}
   |]
