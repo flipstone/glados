@@ -6,15 +6,16 @@ import Happstack.Server
 import Database.Persist.Postgresql
 
 import App.Types
-import Model.DB
-import Handler.Equipment
-import Handler.People
-import Handler.PossessionContracts
 import Handler.Agreement
-import Handler.Fob
-import Handler.FobAssignments
 import Handler.Doors
 import Handler.DoorKeys
+import Handler.Equipment
+import Handler.Fob
+import Handler.FobAssignments
+import Handler.People
+import Handler.PossessionContracts
+import Handler.Open
+import Model.DB
 
 connString = "host=db port=5432 dbname=glados_dev user=glados password=glados"
 
@@ -28,7 +29,8 @@ app :: App Response
 app = do
   decodeBody $ defaultBodyPolicy "/tmp/" 4096 4096 4096
   msum [
-      dir "doors" doors
+      dir "open" open
+    , dir "doors" doors
     , dir "doorKeys" doorKeys
     , dir "equipment" equipment
     , dir "people" people

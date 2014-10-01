@@ -21,6 +21,7 @@ executable glados
   -- other-modules:
   default-extensions:  OverloadedStrings
   build-depends:       base >=4.6 && <4.7,
+                       aeson == 0.7.0.6,
                        blaze-html == 0.7.0.2,
                        containers == 0.5.0.0,
                        digestive-functors == 0.7.1.1,

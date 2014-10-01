@@ -18,12 +18,15 @@ Equipment
   deriving Show
 Fob
   key String
+  UniqueKey key
   deriving Show
 FobAssignment
   personId PersonId
   fobId FobId
   startDate Day
   expirationDate Day Maybe
+  AssignmentByFobId fobId
+  deriving Show
 Person
   firstName String
   lastName String
@@ -39,14 +42,17 @@ Agreement
   name String
   author String
   version Int
+  deriving Show
 Door
   name String
   hardwareAddress String
+  UniqueAddress hardwareAddress
   deriving Show
 DoorKey
   doorId DoorId
   personId PersonId
   startDate Day
   expirationDate Day Maybe
+  deriving Show
 |]
 

@@ -2,8 +2,8 @@
 {-# LANGUAGE MultiParamTypeClasses #-}
 module App.Types where
 
-import Control.Applicative (Applicative)
-import Control.Monad (MonadPlus)
+import Control.Applicative (Applicative, Alternative(..))
+import Control.Monad (MonadPlus(..))
 import Control.Monad.IO.Class  (MonadIO)
 import Control.Monad.Logger (LoggingT, runStdoutLoggingT, MonadLogger(..))
 import Control.Monad.Trans (lift)
@@ -24,6 +24,11 @@ newtype App a = App (ServerPartT AppBackend a)
            , MonadIO
            , MonadPlus
            )
+
+instance Alternative App where
+  empty = mzero
+  (<|>) = mplus
+
 
 runBackendPool :: ConnectionPool -> AppBackend a -> IO a
 runBackendPool pool backend = runResourceT
