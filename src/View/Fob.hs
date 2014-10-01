@@ -6,19 +6,19 @@ import View.Helpers
 import View.Layout
 
 fobListView :: [Entity Fob] -> Html
-fobListView fob = layout [shamlet|
-  <a href="/fob/new">Add Fob</a>
+fobListView fobs = layout [shamlet|
+  <a href="/fobs/new">Add Fob</a>
   <ul>
-    $forall Entity key f <-fob
+    $forall Entity key fob <-fobs
       <li>
-        #{fobKey f}
+        #{fobKey fob}
 
-        <a href="/fob/edit/#{key}">Edit</a>
+        <a href="/fobs/edit/#{key}">Edit</a>
 |]
 
 fobNewView :: View Text -> Html
 fobNewView view = layout [shamlet|
-  <form action="/fob" method="POST">
+  <form action="/fobs" method="POST">
     ^{fobFields view}
 
     <input type="submit" value="save">
@@ -26,7 +26,7 @@ fobNewView view = layout [shamlet|
 
 fobEditView :: Entity Fob -> View Text ->Html
 fobEditView (Entity id _) view = layout [shamlet|
-  <form action="/fob/#{id}" method="POST">
+  <form action="/fobs/#{id}" method="POST">
     ^{fobFields view}
 
     <input type="submit" value="save">

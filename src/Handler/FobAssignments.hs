@@ -62,19 +62,19 @@ fobAssignmentsUpdate ent@(Entity key fobAssignment) = do
 fobAssignmentForm :: Formlet Text App FobAssignment
 fobAssignmentForm fa = monadic $ do
   people <- runDB $ selectList [] []
-  fob <- runDB $ selectList [] []
+  fobs <- runDB $ selectList [] []
 
-  return $ fobAssignmentFormPure people fob fa
+  return $ fobAssignmentFormPure people fobs fa
 
 fobAssignmentFormPure  :: Monad m
                           => [Entity Person]
                           -> [Entity Fob]
                           -> Formlet Text m FobAssignment
-fobAssignmentFormPure people fob fa = FobAssignment
+fobAssignmentFormPure people fobs fa = FobAssignment
   <$> "personId" .: foreignKey people (fobAssignmentPersonId <$> fa)
-  <*> "fobId" .: foreignKey fob (fobAssignmentFobId <$> fa)
-  <*> "startDate" .: dateFormlet "%m/%d/%Y" (fobAssignmentStartDate <$> fa)
-  <*> "expirationDate" .: optionalDateFormlet "%m/%d/%Y" (fobAssignmentExpirationDate =<< fa)
+  <*> "fobId" .: foreignKey fobs (fobAssignmentFobId <$> fa)
+  <*> "startDate" .: dateField (fobAssignmentStartDate <$> fa)
+  <*> "expirationDate" .: optionalDateField (fobAssignmentExpirationDate =<< fa)
 
 instance SelectOption Person where
   toOptionText p = T.pack $ personFirstName p ++ " " ++
@@ -82,18 +82,5 @@ instance SelectOption Person where
 
 instance SelectOption Fob where
   toOptionText e = T.pack $ fobKey e
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 

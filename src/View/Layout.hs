@@ -11,10 +11,10 @@ layout body = [shamlet|
         <a href="/people">People
         <a href="/equipment">Equipment
         <a href="/doors">Doors
-        <a href="/doorkeys">Keys
+        <a href="/doorKeys">Keys
         <a href="/possessionContracts">Possession Contracts
-        <a href="/agreement">Agreement
-        <a href="/fob">Fob
+        <a href="/agreements">Agreements
+        <a href="/fobs">Fobs
         <a href="/fobAssignments">Fob Assignments
       <div>
         ^{body}

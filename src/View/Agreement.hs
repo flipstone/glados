@@ -6,21 +6,21 @@ import View.Helpers
 import View.Layout
 
 agreementListView :: [Entity Agreement] -> Html
-agreementListView agreement = layout [shamlet|
-  <a href="/agreement/new"> Add Agreement </a>
+agreementListView agreements = layout [shamlet|
+  <a href="/agreements/new"> Add Agreement </a>
   <ul>
-    $forall Entity key e <- agreement
+    $forall Entity key agreement <- agreements
       <li>
-        #{agreementName e}
-        #{agreementAuthor e}
-        #{agreementVersion e}
+        #{agreementName agreement}
+        #{agreementAuthor agreement}
+        #{agreementVersion agreement}
 
-        <a href="/agreement/edit/#{key}">Edit</a>
+        <a href="/agreements/edit/#{key}">Edit</a>
   |]
 
 agreementNewView :: View Text -> Html
 agreementNewView view = layout [shamlet|
-  <form action="/agreement" method="POST">
+  <form action="/agreements" method="POST">
     ^{agreementFields view}
 
     <input type="submit" value="save">
@@ -28,7 +28,7 @@ agreementNewView view = layout [shamlet|
 
 agreementEditView :: Entity Agreement -> View Text -> Html
 agreementEditView (Entity id _) view = layout [shamlet|
-  <form action="/agreement/#{id}" method="POST">
+  <form action="/agreements/#{id}" method="POST">
     ^{agreementFields view}
 
     <input type="submit" value="save">

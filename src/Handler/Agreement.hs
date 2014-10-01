@@ -1,14 +1,14 @@
 {-# LANGUAGE GADTs #-}
 module Handler.Agreement
-  ( agreement
+  ( agreements
   ) where
 
 import Handler.Helpers
 import Model
 import View.Agreement
 
-agreement :: App Response
-agreement = routeResource $ ResourceActions {
+agreements :: App Response
+agreements = routeResource $ ResourceActions {
     resActionList = agreementList
   , resActionNew = agreementNew
   , resActionEdit = agreementEdit
@@ -20,13 +20,13 @@ agreementRes :: Resource Agreement
 agreementRes = defaultResource {
     resNewView = agreementNewView
   , resEditView = agreementEditView
-  , resIndexUri = "/agreement"
+  , resIndexUri = "/agreements"
   }
 
 agreementList :: App Response
 agreementList = do
-  agreement <- runDB $ selectList [] [] :: App [Entity Agreement]
-  ok $ toResponse $ agreementListView agreement
+  agreements <- runDB $ selectList [] [] :: App [Entity Agreement]
+  ok $ toResponse $ agreementListView agreements
 
 agreementNew :: App Response
 agreementNew = do

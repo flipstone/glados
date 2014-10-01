@@ -13,7 +13,7 @@ data DoorKeyView = DoorKeyView {
 
 doorKeysListView :: [DoorKeyView] -> Html
 doorKeysListView doorKeys = layout [shamlet|
-  <a href="/doorkeys/new">Add a Key</a>
+  <a href="/doorKeys/new">Add a Key</a>
   <ul>
     $forall view <- doorKeys
       $with Entity id doorKey <- doorKey view
@@ -23,20 +23,20 @@ doorKeysListView doorKeys = layout [shamlet|
               #{personFirstName $ person } #{personLastName $ person }
               can open #{doorName $ door}
 
-          <a href="/doorkeys/edit/#{id}">Edit</a>
+          <a href="/doorKeys/edit/#{id}">Edit</a>
 
   |]
 
 doorKeysNewView :: View Text -> Html
 doorKeysNewView view = layout [shamlet|
-  <form action="/doorkeys" method="POST">
+  <form action="/doorKeys" method="POST">
     ^{doorKeyFields view}
     <input type="submit" value="Save">
   |]
 
 doorKeysEditView :: Entity DoorKey -> View Text -> Html
 doorKeysEditView (Entity id _) view = layout [shamlet|
-  <form action="/doorkeys/#{id}" method="POST">
+  <form action="/doorKeys/#{id}" method="POST">
     ^{doorKeyFields view}
 
     <input type="submit" value="save">
@@ -46,4 +46,7 @@ doorKeyFields :: View Text -> Html
 doorKeyFields view = do [shamlet|
   ^{selectField "personId" "Person" view}
   ^{selectField "doorId" "Door" view}
+  ^{textField "startDate" "Start Date" view}
+  ^{textField "expirationDate" "Expiration Date" view}
   |]
+

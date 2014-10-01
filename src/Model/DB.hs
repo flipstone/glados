@@ -45,5 +45,7 @@ Door
 DoorKey
   doorId DoorId
   personId PersonId
+  startDate Day
+  expirationDate Day Maybe
 |]
 

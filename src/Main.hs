@@ -29,12 +29,12 @@ app = do
   decodeBody $ defaultBodyPolicy "/tmp/" 4096 4096 4096
   msum [
       dir "doors" doors
-    , dir "doorkeys" doorKeys
+    , dir "doorKeys" doorKeys
     , dir "equipment" equipment
     , dir "people" people
     , dir "possessionContracts" possessionContracts
-    , dir "agreement" agreement
-    , dir "fob" fob
+    , dir "agreements" agreements
+    , dir "fobs" fobs
     , dir "fobAssignments" fobAssignments
     ]
 

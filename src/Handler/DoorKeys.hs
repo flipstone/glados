@@ -25,7 +25,7 @@ doorKeyRes :: Resource DoorKey
 doorKeyRes = defaultResource {
     resNewView = doorKeysNewView
   , resEditView = doorKeysEditView
-  , resIndexUri = "/doorkeys"
+  , resIndexUri = "/doorKeys"
 }
 
 doorKeysList :: App Response
@@ -67,6 +67,8 @@ doorKeyForm doorKey = monadic $ do
   return $ DoorKey
     <$> "doorId" .: foreignKey doors (doorKeyDoorId <$> doorKey)
     <*> "personId" .: foreignKey people (doorKeyPersonId <$> doorKey)
+    <*> "startDate" .: dateField (doorKeyStartDate <$> doorKey)
+    <*> "expirationDate" .: optionalDateField (doorKeyExpirationDate =<< doorKey)
 
 instance SelectOption Person where
   toOptionText p = T.pack $ personFirstName p ++ " " ++

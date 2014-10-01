@@ -1,5 +1,6 @@
 module Handler.Helpers.Form where
 
+import Data.Time.Calendar (Day)
 import Data.Text (Text)
 import qualified Data.Text as T
 import Database.Persist
@@ -15,4 +16,14 @@ foreignKey entities = choiceWith options
 
 class SelectOption a where
   toOptionText :: a -> Text
+
+
+dateFormat :: String
+dateFormat = "%m/%d/%Y"
+
+dateField :: Monad m => Formlet Text m Day
+dateField = dateFormlet "%m/%d/%Y"
+
+optionalDateField :: Monad m => Maybe Day -> Form Text m (Maybe Day)
+optionalDateField = optionalDateFormlet "%m/%d/%Y"
 

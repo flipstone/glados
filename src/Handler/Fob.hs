@@ -1,14 +1,14 @@
 {-# LANGUAGE GADTs #-}
 module Handler.Fob
-  ( fob
+  ( fobs
   ) where
 
 import Handler.Helpers
 import Model
 import View.Fob
 
-fob :: App Response
-fob = routeResource $ ResourceActions {
+fobs :: App Response
+fobs = routeResource $ ResourceActions {
     resActionList = fobList
   , resActionNew = fobNew
   , resActionEdit = fobEdit
@@ -20,13 +20,13 @@ fobRes :: Resource Fob
 fobRes = defaultResource {
     resNewView = fobNewView
   , resEditView = fobEditView
-  , resIndexUri = "/fob"
+  , resIndexUri = "/fobs"
   }
 
 fobList :: App Response
 fobList = do
-  fob <- runDB $ selectList [] [] :: App [Entity Fob]
-  ok $ toResponse $ fobListView fob
+  fobs <- runDB $ selectList [] [] :: App [Entity Fob]
+  ok $ toResponse $ fobListView fobs
 
 fobNew :: App Response
 fobNew = do
