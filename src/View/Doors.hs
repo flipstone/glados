@@ -40,4 +40,5 @@ doorsEditView (Entity id _) view = layout [shamlet|
 doorsFields :: View Text -> Html
 doorsFields view = [shamlet|
   ^{textField "name" "Door Name" view}
+  ^{textField "hardwareAddress" "Hardware Address" view}
 |]

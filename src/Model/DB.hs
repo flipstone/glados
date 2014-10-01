@@ -41,6 +41,7 @@ Agreement
   version Int
 Door
   name String
+  hardwareAddress String
   deriving Show
 DoorKey
   doorId DoorId

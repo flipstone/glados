@@ -55,3 +55,5 @@ doorsUpdate ent@(Entity _ door) = do
 doorForm :: Formlet Text App Door
 doorForm d = Door
   <$> "name" .: validate notEmpty (string (doorName <$> d))
+  <*> "hardwareAddress" .: validate notEmpty (string (doorHardwareAddress <$> d))
+
