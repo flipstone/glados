@@ -1,3 +1,5 @@
 dist
 .vagrant
 .cabal-sandbox
+deployment.template/config/db.json
+

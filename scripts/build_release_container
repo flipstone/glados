@@ -1,0 +1,34 @@
+#!/bin/sh
+
+set -e
+
+if [ "$(which boot2docker)" != "" ]; then
+  echo "boot2docker present. Setting DOCKER_HOST"
+  export DOCKER_HOST=tcp://$(boot2docker ip 2>/dev/null):2375
+fi;
+
+VERSION=$(date +%Y%m%d-%H%M%S)
+
+echo "=== Starting Build Environment ==="
+vagrant up
+
+echo ""
+echo "=== Building API Executable ==="
+echo 'cd /vagrant && cabal sandbox init && cabal install' | \
+  vagrant ssh
+
+echo ""
+echo "=== Building Docker Container ==="
+
+CP_PATHS=".cabal-sandbox/bin/glados containers/release/glados"
+
+diff $CP_PATHS || \
+  cp $CP_PATHS || \
+  echo "Binary has changed. Copying"
+
+docker pull quay.io/flipstone/glados
+TAG="quay.io/flipstone/glados:$VERSION"
+docker build -t $TAG containers/release
+
+echo "Built $TAG"
+

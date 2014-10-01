@@ -1,0 +1,10 @@
+#!/bin/sh
+set -e
+
+. $DEPLOY_ROOT/settings
+
+if [ ! -f $DEPLOY_ROOT/config/db.json ]; then
+  echo "No $DEPLOY_ROOT/config/db.json file found. Please configure it."
+  exit 1;
+fi;
+

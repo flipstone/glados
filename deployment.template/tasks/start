@@ -1,0 +1,6 @@
+#!/bin/sh
+set -e
+
+. $DEPLOY_ROOT/settings
+$SUDO docker run -p $HOST_PORT:$CONTAINER_PORT -d -v $DEPLOY_ROOT:/data $REPO:$CURRENT_VERSION
+

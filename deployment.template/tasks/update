@@ -1,0 +1,8 @@
+#!/bin/sh
+set -e
+
+. $DEPLOY_ROOT/settings
+$SUDO docker pull $REPO
+$TASKS/configure
+$TASKS/stop
+$TASKS/start

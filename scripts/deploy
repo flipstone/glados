@@ -1,0 +1,18 @@
+#!/bin/sh
+set -e
+
+DEPLOY_ROOT=/srv/glados
+HOST="glados.flipstone.com"
+USERNAME=ubuntu
+SSH_DEST=$USERNAME@$HOST
+ROBOT="flipstone+flippy"
+ROBOT_PASS="JGW4JUBC758SIC4BJFJTFY6L3JTCUH5K0C57CBIB8YREM711322HDENLN6HI621W"
+
+#./tasks/decrypt-authorization
+
+rsync -avz -e "ssh $*" \
+  deployment.template/ \
+  $SSH_DEST:$DEPLOY_ROOT
+
+ssh $* $SSH_DEST "sudo docker login -u=$ROBOT -p=$ROBOT_PASS -e=anything quay.io"
+ssh $* $SSH_DEST "DEPLOY_ROOT=$DEPLOY_ROOT $DEPLOY_ROOT/tasks/update"

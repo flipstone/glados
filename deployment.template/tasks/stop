@@ -1,0 +1,10 @@
+#!/bin/sh
+set -e
+
+. $DEPLOY_ROOT/settings
+RUNNING_CONTAINERS=$(sudo docker ps | grep $REPO | awk '{print $1}')
+
+if [ "$RUNNING_CONTAINERS" != "" ]; then
+  $SUDO docker stop $RUNNING_CONTAINERS
+fi;
+

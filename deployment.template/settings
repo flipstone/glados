@@ -1,0 +1,15 @@
+REPO=quay.io/flipstone/glados
+CURRENT_VERSION=20141001-095200
+READLINK=$(which greadlink || echo "readlink")
+
+SUDO="sudo"
+
+if [ "$(uname)" = "Darwin" ]; then
+  SUDO=""
+fi;
+
+DEPLOY_ROOT=$($READLINK -f $DEPLOY_ROOT)
+TASKS=$DEPLOY_ROOT/tasks
+HOST_PORT=26320
+CONTAINER_PORT=8000
+
