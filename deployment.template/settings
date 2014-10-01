@@ -1,5 +1,5 @@
 REPO=quay.io/flipstone/glados
-CURRENT_VERSION=20141001-095200
+CURRENT_VERSION=20141001-113251
 READLINK=$(which greadlink || echo "readlink")
 
 SUDO="sudo"
