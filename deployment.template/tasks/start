@@ -2,5 +2,10 @@
 set -e
 
 . $DEPLOY_ROOT/settings
-$SUDO docker run -p $HOST_PORT:$CONTAINER_PORT -d -v $DEPLOY_ROOT:/data $REPO:$CURRENT_VERSION
+$SUDO docker run --name $CONTAINER_NAME \
+                 --restart=always \
+                 -p $HOST_PORT:$CONTAINER_PORT \
+                 -d \
+                 -v $DEPLOY_ROOT:/data \
+                 $REPO:$CURRENT_VERSION
 
