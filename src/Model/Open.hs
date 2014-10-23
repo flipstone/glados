@@ -11,6 +11,7 @@ import Database.Persist
 import App.Types
 
 import Model.DB
+import Model.Irc
 
 data Ok = Ok
 type OpenResult = Either OpenError Ok
@@ -21,6 +22,7 @@ data OpenError = DoorNotFound
                | FobNotFound
                | FobNotAssigned
                | FobAssignmentNotCurrent
+               | PersonNotFound
 
 type Opening = ExceptT OpenError AppBackend
 
@@ -39,6 +41,10 @@ tryOpenOn today doorKey fobKey = runExceptT $ do
   door <- findDoor doorKey
   fob <- findFob fobKey
   personId <- findPersonId today fob
+  p <- findPerson $ personId
+
+  writeToChat
+    $ "Someone " ++ (show $ personFirstName $ p) ++ " is trying to open a door: " ++ ( show $ doorName $ entityVal door )
 
   checkDoorKey today (entityKey door) personId
 
@@ -49,6 +55,11 @@ findDoor doorKey = required DoorNotFound <$>
 findFob :: Unique Fob -> Opening (Entity Fob)
 findFob fobKey = required FobNotFound <$>
                  lift $ getBy fobKey
+
+findPerson :: PersonId -> Opening (Person)
+findPerson personKey = required PersonNotFound <$>
+                 lift $ get personKey
+
 
 findPersonId :: Day -> Entity Fob -> Opening PersonId
 findPersonId today fob = do

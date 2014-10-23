@@ -2,4 +2,5 @@ dist
 .vagrant
 .cabal-sandbox
 deployment.template/config/db.json
-
+.DS_Store
+irc/

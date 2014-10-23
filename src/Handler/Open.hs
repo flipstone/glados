@@ -10,6 +10,7 @@ import Data.Time.Clock
 
 import Handler.Helpers
 import Model
+import Model.Irc
 
 open :: App Response
 open = do
