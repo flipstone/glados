@@ -11,9 +11,11 @@ import Database.Persist
 import App.Types
 
 import Model.DB
-import Model.Irc
 
-data Ok = Ok
+data Ok = Ok {
+  attemptingPerson:: Person,
+  attemptedDoor:: Door
+}
 type OpenResult = Either OpenError Ok
 
 data OpenError = DoorNotFound
@@ -42,11 +44,7 @@ tryOpenOn today doorKey fobKey = runExceptT $ do
   fob <- findFob fobKey
   personId <- findPersonId today fob
   p <- findPerson $ personId
-
-  writeToChat
-    $ "Someone " ++ (show $ personFirstName $ p) ++ " is trying to open a door: " ++ ( show $ doorName $ entityVal door )
-
-  checkDoorKey today (entityKey door) personId
+  checkDoorKey today door (Entity personId p)
 
 findDoor :: Unique Door -> Opening (Entity Door)
 findDoor doorKey = required DoorNotFound <$>
@@ -72,18 +70,21 @@ findPersonId today fob = do
   else
     throwE FobAssignmentNotCurrent
 
-checkDoorKey :: Day -> DoorId -> PersonId -> Opening Ok
-checkDoorKey today doorId personId = do
+checkDoorKey :: Day -> Entity Door -> Entity Person -> Opening Ok
+checkDoorKey today door person = do
   doorKeys <- map entityVal <$>
-                selectList [ DoorKeyDoorId ==. doorId
-                           , DoorKeyPersonId ==. personId
+                selectList [ DoorKeyDoorId ==. entityKey door
+                           , DoorKeyPersonId ==. entityKey person
                            ]
                            []
 
   if null doorKeys then
     throwE DoorKeyNotFound
   else if any (isDoorKeyCurrent today) doorKeys then
-    return Ok
+    return Ok{
+      attemptingPerson= entityVal person,
+      attemptedDoor= entityVal door
+    }
   else
     throwE DoorKeyNotCurrent
 

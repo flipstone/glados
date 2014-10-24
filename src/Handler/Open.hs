@@ -26,7 +26,11 @@ open = do
                               (UniqueKey fobKey)
 
   case result of
-    Right Ok -> ok $ openResponse True []
+    Right (Ok p door) -> do
+      let name = ( personFirstName p ) ++ " " ++ (personLastName p)
+      writeToChat
+        $ name ++ " has opened the " ++ ( doorName door )
+      ok $ openResponse True []
     Left err -> let msgs = [openErrorMessage err]
                 in badRequest $ openResponse False msgs
 
