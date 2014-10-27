@@ -4,6 +4,10 @@ import System.IO
 import System.Directory
 import Control.Monad.Trans (liftIO, MonadIO)
 import App.Types
+import Network.SimpleIRC
+import qualified Data.ByteString.Char8 as Char8
+
+freenode = ( mkDefaultConfig "chat.freenode.net" "SimpleFlippy" ) { cChannels = ["#flipstonesandbox"] }
 
 joinChannel :: MonadIO m => m ()
 joinChannel = liftIO $ do
@@ -19,3 +23,12 @@ writeToChat s = liftIO $ do
    hPutStrLn channelIn s
    hFlush channelIn
    hClose channelIn
+
+
+simpleWriteToChat :: MonadIO m => String -> m ()
+simpleWriteToChat message = liftIO $ do
+  instanceEither <- connect freenode False True
+  let Right ircInstance = instanceEither
+  let bytes = Char8.pack message
+  sendMsg ircInstance "#flipstonesandbox" bytes
+  disconnect ircInstance "QUIT"

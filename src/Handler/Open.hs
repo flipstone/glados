@@ -11,6 +11,7 @@ import Data.Time.Clock
 import Handler.Helpers
 import Model
 import Model.Irc
+import Control.Monad.Reader
 
 open :: App Response
 open = do
@@ -24,12 +25,14 @@ open = do
   result <- runDB $ tryOpenOn (utctDay now)
                               (UniqueAddress hardwareAddress)
                               (UniqueKey fobKey)
-
+  asked <- asks serverHandle
   case result of
     Right (Ok p door) -> do
       let name = ( personFirstName p ) ++ " " ++ (personLastName p)
-      writeToChat
-        $ name ++ " has opened the " ++ ( doorName door )
+      let message = name ++ " has opened the " ++ (asked)
+      --simpleWriteToChat message
+      writeToChat message
+
       ok $ openResponse True []
     Left err -> let msgs = [openErrorMessage err]
                 in badRequest $ openResponse False msgs
