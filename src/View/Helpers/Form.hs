@@ -14,6 +14,14 @@ textField path labelText view = [shamlet|
     ^{fieldErrors path view}
   |]
 
+dateField :: Text -> Html -> View Text -> Html
+dateField path labelText view = [shamlet|
+  <div>
+    ^{label path view labelText}
+    ^{inputText path view} (mm/dd/yyyy)
+    ^{fieldErrors path view}
+  |]
+
 checkboxField :: Text -> Html -> View Text -> Html
 checkboxField path labelText view = [shamlet|
   <div>

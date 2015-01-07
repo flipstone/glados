@@ -45,6 +45,6 @@ fobAssignmentsFields :: View Text -> Html
 fobAssignmentsFields view = [shamlet|
   ^{selectField "personId" "Person" view}
   ^{selectField "fobId" "Fob" view}
-  ^{textField "startDate" "Start Date" view}
-  ^{textField "expirationDate" "Expiration Date" view}
+  ^{dateField "startDate" "Start Date" view}
+  ^{dateField "expirationDate" "Expiration Date" view}
   |]

@@ -153,6 +153,6 @@ applicationFields view = [shamlet|
   ^{textField "emergencyContactWorkPhone" "Work Phone" view}
 
   <h2>Signature Info
-  ^{textField "signatureDate" "Signature Date" view}
+  ^{dateField "signatureDate" "Signature Date" view}
   |]
 

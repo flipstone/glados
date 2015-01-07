@@ -46,7 +46,7 @@ doorKeyFields :: View Text -> Html
 doorKeyFields view = do [shamlet|
   ^{selectField "personId" "Person" view}
   ^{selectField "doorId" "Door" view}
-  ^{textField "startDate" "Start Date" view}
-  ^{textField "expirationDate" "Expiration Date" view}
+  ^{dateField "startDate" "Start Date" view}
+  ^{dateField "expirationDate" "Expiration Date" view}
   |]
 
