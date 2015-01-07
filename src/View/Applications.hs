@@ -17,6 +17,8 @@ applicationsShowView (Entity _ person) (Entity id a) = layout [shamlet|
   ^{showField "Cell Phone" applicationCellPhone a}
   ^{showField "Work Phone" applicationWorkPhone a}
   ^{showField "Email Address" applicationEmailAddress a}
+  ^{showField "Plan Type" applicationPlanType a}
+  ^{showField "Spouse's Name" applicationNameOfSpouse a}
 
   |]
 
@@ -58,4 +60,6 @@ applicationFields view = [shamlet|
   ^{textField "cellPhone" "Cell Phone" view}
   ^{textField "workPhone" "Work Phone" view}
   ^{textField "emailAddress" "Email Address" view}
+  ^{selectField "planType" "Plan Type" view}
+  ^{textField "nameOfSpouse" "Spouse's Name" view}
   |]

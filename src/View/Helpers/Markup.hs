@@ -10,6 +10,8 @@ import Database.Persist.Types
 import Text.Blaze.Html (ToMarkup, toMarkup)
 import Text.Hamlet (shamlet, Html)
 
+import Model.FieldTypes
+
 instance ToMarkup a => ToMarkup (Maybe a) where
   toMarkup (Just a) = toMarkup a
   toMarkup _ = ""
@@ -29,6 +31,9 @@ instance ToMarkup PersistValue where
           render (PersistTimeOfDay tod) = T.pack $ show tod
           render (PersistUTCTime utc) = T.pack $ show utc
           render PersistNull = T.empty
+
+instance ToMarkup MembershipPlanType where
+  toMarkup val = toMarkup (show val)
 
 showField :: ToMarkup value
           => Text -> (record -> value) -> record -> Html

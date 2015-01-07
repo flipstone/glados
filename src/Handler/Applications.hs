@@ -62,5 +62,10 @@ applicationForm person a = Application
   <*> "cellPhone" .: optionalString (applicationCellPhone =<< a)
   <*> "workPhone" .: optionalString (applicationWorkPhone =<< a)
   <*> "emailAddress" .: optionalString (applicationEmailAddress =<< a)
+  <*> "planType" .: choice planTypeOptions (applicationPlanType <$> a)
+  <*> "nameOfSpouse" .: optionalString (applicationNameOfSpouse =<< a)
 
+planTypeOptions :: [ (MembershipPlanType, T.Text) ]
+planTypeOptions = map mkOption membershipPlanTypes
+  where mkOption planType = (planType, T.pack (show planType))
 

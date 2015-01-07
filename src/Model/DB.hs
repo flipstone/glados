@@ -4,10 +4,15 @@
 {-# LANGUAGE QuasiQuotes        #-}
 {-# LANGUAGE TemplateHaskell    #-}
 {-# LANGUAGE TypeFamilies       #-}
-module Model.DB where
+module Model.DB
+  ( module Model.FieldTypes
+  , module Model.DB
+  ) where
 
 import Data.Time.Calendar (Day)
 import Database.Persist.TH
+
+import Model.FieldTypes
 
 share [mkPersist sqlSettings, mkMigrate "migrateAll"] [persistLowerCase|
 Application
@@ -20,6 +25,8 @@ Application
   cellPhone String Maybe
   workPhone String Maybe
   emailAddress String Maybe
+  planType MembershipPlanType
+  nameOfSpouse String Maybe
 Equipment
   make String
   model String
