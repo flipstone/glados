@@ -8,6 +8,7 @@ import View.Layout
 applicationsShowView :: Entity Person -> Entity Application -> Html
 applicationsShowView (Entity _ person) (Entity id a) = layout [shamlet|
   ^{applicationHeader person}
+  (signed #{show $ applicationSignatureDate a})
 
   <h2>Contact Information
   ^{showField "Name" applicationName a}
@@ -150,4 +151,8 @@ applicationFields view = [shamlet|
   ^{textField "emergencyContactName" "Name" view}
   ^{textField "emergencyContactHomePhone" "Home Phone" view}
   ^{textField "emergencyContactWorkPhone" "Work Phone" view}
+
+  <h2>Signature Info
+  ^{textField "signatureDate" "Signature Date" view}
   |]
+

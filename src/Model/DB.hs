@@ -18,6 +18,7 @@ share [mkPersist sqlSettings, mkMigrate "migrateAll"] [persistLowerCase|
 Application
   personId PersonId
   name String
+  signatureDate Day
   streetAddress String
   city String
   state String

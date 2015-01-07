@@ -55,6 +55,7 @@ applicationForm :: Monad m => Entity Person -> Formlet Text m Application
 applicationForm person a = Application
   <$> pure (entityKey person)
   <*> "name" .: validate notEmpty (string (applicationName <$> a))
+  <*> "signatureDate" .: dateField (applicationSignatureDate <$> a)
   <*> "streetAddress" .: validate notEmpty (string (applicationStreetAddress <$> a))
   <*> "city" .: validate notEmpty (string (applicationCity <$> a))
   <*> "state" .: validate notEmpty (string (applicationState <$> a))
