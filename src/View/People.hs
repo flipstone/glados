@@ -31,25 +31,38 @@ peopleListView people = layout [shamlet|
                 #{equipmentModel e}
   |]
 
-peopleShowView :: Entity Person -> [Entity Application] -> Html
-peopleShowView (Entity personId p) applications = layout [shamlet|
+peopleShowView :: Entity Person
+               -> [Entity Application]
+               -> Maybe (Entity Membership)
+               -> Html
+peopleShowView (Entity personId p) applications membership = layout [shamlet|
   <h1>
     #{personFirstName p}
     #{personLastName p}
 
-  <a href="/people/#{personId}/applications/new">
-    Add Application
+  <div>
+    $case membership
+      $of Just (Entity membershipId _)
+        <a href="/people/#{personId}/membership/#{membershipId}">
+          Manage Membership
+      $of Nothing
+        <a href="/people/#{personId}/membership/new">
+          Add Membership
 
-  <ul>
-    $forall (Entity appId app) <- applications
-      <li>
-        <a href="/people/#{personId}/applications/#{appId}">
-          "#{applicationName app}"
+  <div>
+    <a href="/people/#{personId}/applications/new">
+      Add Application
 
-        -
+    <ul>
+      $forall (Entity appId app) <- applications
+        <li>
+          <a href="/people/#{personId}/applications/#{appId}">
+            "#{applicationName app}"
 
-        <a href="/people/#{personId}/applications/#{appId}/edit">
-          Edit
+          -
+
+          <a href="/people/#{personId}/applications/#{appId}/edit">
+            Edit
   |]
 
 peopleNewView :: View Text -> Html

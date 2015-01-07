@@ -57,6 +57,11 @@ FobAssignment
   expirationDate Day Maybe
   AssignmentByFobId fobId
   deriving Show
+Membership
+  personId PersonId
+  active Bool
+  MemberId personId
+  deriving Show
 Person
   firstName String
   lastName String

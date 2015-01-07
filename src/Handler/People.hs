@@ -50,7 +50,8 @@ peopleEdit ent@(Entity key person) = do
 peopleShow :: Entity Person -> App Response
 peopleShow ent@(Entity key person) = do
   applications <- runDB $ selectList [ApplicationPersonId ==. key] []
-  ok $ toResponse $ peopleShowView ent applications
+  membership <- runDB $ getBy (MemberId key)
+  ok $ toResponse $ peopleShowView ent applications membership
 
 peopleCreate :: App Response
 peopleCreate = do
