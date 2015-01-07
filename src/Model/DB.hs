@@ -10,6 +10,16 @@ import Data.Time.Calendar (Day)
 import Database.Persist.TH
 
 share [mkPersist sqlSettings, mkMigrate "migrateAll"] [persistLowerCase|
+Application
+  personId PersonId
+  name String
+  streetAddress String
+  city String
+  state String
+  zip String
+  cellPhone String Maybe
+  workPhone String Maybe
+  emailAddress String Maybe
 Equipment
   make String
   model String

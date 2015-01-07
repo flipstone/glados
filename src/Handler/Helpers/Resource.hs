@@ -16,9 +16,22 @@ data ResourceActions a = ResourceActions {
     resActionList :: App Response
   , resActionNew :: App Response
   , resActionEdit :: Entity a -> App Response
+  , resActionShow :: Entity a -> App Response
   , resActionCreate :: App Response
   , resActionUpdate :: Entity a -> App Response
   }
+
+defaultActions :: ResourceActions a
+defaultActions = ResourceActions {
+    resActionList = notAvailable
+  , resActionNew = notAvailable
+  , resActionEdit = const notAvailable
+  , resActionShow = const notAvailable
+  , resActionCreate = notAvailable
+  , resActionUpdate = const notAvailable
+  }
+  where
+    notAvailable = notFound $ toResponse ("Action not available for this resource"::String)
 
 routeResource :: ( PersistEntity a,
                    PersistEntityBackend a ~ SqlBackend)
@@ -26,9 +39,12 @@ routeResource :: ( PersistEntity a,
 routeResource actions = msum [
     methodM GET >> resActionList actions
   , methodM POST >> resActionCreate actions
-  , entityId $ (\ent -> methodM POST >> resActionUpdate actions ent)
   , dir "new" $ methodM GET >> resActionNew actions
-  , dir "edit" $ entityId $ (\ent -> methodM GET >> resActionEdit actions ent)
+  , entityId $ \ent ->
+      msum [ methodM POST >> resActionUpdate actions ent
+           , methodM GET >> resActionShow actions ent
+           , dir "edit" $ methodM GET >> resActionEdit actions ent
+           ]
   ]
 
 data Resource a = Resource {
@@ -36,6 +52,7 @@ data Resource a = Resource {
   , resUpdate :: Key a -> a -> AppBackend ()
   , resNewView :: View Text -> Html
   , resEditView :: Entity a -> View Text -> Html
+  , resShowView :: Entity a -> View Text -> Html
   , resIndexUri :: Text
   }
 
@@ -47,6 +64,7 @@ defaultResource = Resource {
   , resUpdate = replace
   , resNewView = const ""
   , resEditView = const (const "")
+  , resShowView = const (const "")
   , resIndexUri = "/"
   }
 

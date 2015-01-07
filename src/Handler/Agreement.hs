@@ -8,7 +8,7 @@ import Model
 import View.Agreement
 
 agreements :: App Response
-agreements = routeResource $ ResourceActions {
+agreements = routeResource $ defaultActions {
     resActionList = agreementList
   , resActionNew = agreementNew
   , resActionEdit = agreementEdit

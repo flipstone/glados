@@ -7,7 +7,7 @@ import View.Layout
 
 agreementListView :: [Entity Agreement] -> Html
 agreementListView agreements = layout [shamlet|
-  <a href="/agreements/new"> Add Agreement </a>
+  <a href="/agreements/new">Add Agreement
   <ul>
     $forall Entity key agreement <- agreements
       <li>
@@ -15,7 +15,7 @@ agreementListView agreements = layout [shamlet|
         #{agreementAuthor agreement}
         #{agreementVersion agreement}
 
-        <a href="/agreements/edit/#{key}">Edit</a>
+        <a href="/agreements/#{key}/edit">Edit
   |]
 
 agreementNewView :: View Text -> Html

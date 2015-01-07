@@ -7,13 +7,13 @@ import View.Layout
 
 fobListView :: [Entity Fob] -> Html
 fobListView fobs = layout [shamlet|
-  <a href="/fobs/new">Add Fob</a>
+  <a href="/fobs/new">Add Fob
   <ul>
     $forall Entity key fob <-fobs
       <li>
         #{fobKey fob}
 
-        <a href="/fobs/edit/#{key}">Edit</a>
+        <a href="/fobs/#{key}/edit">Edit
 |]
 
 fobNewView :: View Text -> Html

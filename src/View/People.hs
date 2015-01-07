@@ -12,21 +12,44 @@ data PersonView = PersonView {
 
 peopleListView :: [PersonView] -> Html
 peopleListView people = layout [shamlet|
-  <a href="/people/new">Add a Person</a>
+  <a href="/people/new">Add a Person
   <ul>
     $forall view <- people
       $with Entity key p <- person view
         <li>
-          #{personFirstName p}
-          #{personLastName p}
+          <a href="/people/#{key}">
+            #{personFirstName p}
+            #{personLastName p}
 
-          <a href="/people/edit/#{key}">Edit</a>
+          <a href="/people/#{key}/edit">
+            Edit
 
           <ul>
             $forall Entity _ e <- equipments view
               <li>
                 #{equipmentMake e}
                 #{equipmentModel e}
+  |]
+
+peopleShowView :: Entity Person -> [Entity Application] -> Html
+peopleShowView (Entity personId p) applications = layout [shamlet|
+  <h1>
+    #{personFirstName p}
+    #{personLastName p}
+
+  <a href="/people/#{personId}/applications/new">
+    Add Application
+
+  <ul>
+    $forall (Entity appId app) <- applications
+      <li>
+        <a href="/people/#{personId}/applications/#{appId}">
+          "#{applicationName app}"
+
+        -
+
+        <a href="/people/#{personId}/applications/#{appId}/edit">
+          Edit
   |]
 
 peopleNewView :: View Text -> Html

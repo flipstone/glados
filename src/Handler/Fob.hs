@@ -8,7 +8,7 @@ import Model
 import View.Fob
 
 fobs :: App Response
-fobs = routeResource $ ResourceActions {
+fobs = routeResource $ defaultActions {
     resActionList = fobList
   , resActionNew = fobNew
   , resActionEdit = fobEdit

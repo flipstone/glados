@@ -7,7 +7,7 @@ import View.Layout
 
 equipmentListView :: [Entity Equipment] -> Html
 equipmentListView equipment = layout [shamlet|
-  <a href="/equipment/new">Add Equipment</a>
+  <a href="/equipment/new">Add Equipment
   <ul>
     $forall Entity key e <- equipment
       <li>
@@ -16,7 +16,7 @@ equipmentListView equipment = layout [shamlet|
         #{equipmentSerialNumber e}
         #{equipmentReplacementCost e}
 
-        <a href="/equipment/edit/#{key}">Edit</a>
+        <a href="/equipment/#{key}/edit">Edit
   |]
 
 equipmentNewView :: View Text -> Html

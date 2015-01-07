@@ -13,7 +13,7 @@ data DoorKeyView = DoorKeyView {
 
 doorKeysListView :: [DoorKeyView] -> Html
 doorKeysListView doorKeys = layout [shamlet|
-  <a href="/doorKeys/new">Add a Key</a>
+  <a href="/doorKeys/new">Add a Key
   <ul>
     $forall view <- doorKeys
       $with Entity id doorKey <- doorKey view
@@ -23,7 +23,7 @@ doorKeysListView doorKeys = layout [shamlet|
               #{personFirstName $ person } #{personLastName $ person }
               can open #{doorName $ door}
 
-          <a href="/doorKeys/edit/#{id}">Edit</a>
+          <a href="/doorKeys/#{id}/edit">Edit
 
   |]
 

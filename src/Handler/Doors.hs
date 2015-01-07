@@ -8,13 +8,13 @@ import Handler.Helpers
 import View.Doors
 
 doors :: App Response
-doors = routeResource $ (ResourceActions {
+doors = routeResource $ defaultActions {
     resActionList = doorsList
   , resActionNew = doorsNew
   , resActionCreate = doorsCreate
   , resActionEdit = doorsEdit
   , resActionUpdate = doorsUpdate
-})
+  }
 
 doorsRes :: Resource Door
 doorsRes = defaultResource {

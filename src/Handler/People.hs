@@ -8,10 +8,11 @@ import Handler.Helpers
 import View.People
 
 people :: App Response
-people = routeResource $ ResourceActions {
+people = routeResource $ defaultActions {
     resActionList = peopleList
   , resActionNew = peopleNew
   , resActionEdit = peopleEdit
+  , resActionShow = peopleShow
   , resActionCreate = peopleCreate
   , resActionUpdate = peopleUpdate
   }
@@ -45,6 +46,11 @@ peopleEdit :: Entity Person -> App Response
 peopleEdit ent@(Entity key person) = do
   view <- getForm "person" (personForm (Just person))
   ok $ toResponse $ peopleEditView ent view
+
+peopleShow :: Entity Person -> App Response
+peopleShow ent@(Entity key person) = do
+  applications <- runDB $ selectList [ApplicationPersonId ==. key] []
+  ok $ toResponse $ peopleShowView ent applications
 
 peopleCreate :: App Response
 peopleCreate = do

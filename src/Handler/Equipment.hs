@@ -8,7 +8,7 @@ import Model
 import View.Equipment
 
 equipment :: App Response
-equipment = routeResource $ ResourceActions {
+equipment = routeResource $ defaultActions {
     resActionList = equipmentList
   , resActionNew = equipmentNew
   , resActionEdit = equipmentEdit

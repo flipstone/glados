@@ -10,6 +10,7 @@ import App.Environment
 import Config.DB
 
 import Handler.Agreement
+import Handler.Applications
 import Handler.Doors
 import Handler.DoorKeys
 import Handler.Equipment
@@ -20,6 +21,9 @@ import Handler.PossessionContracts
 import Handler.Open
 import Handler.Style
 import Handler.Welcome
+
+import Handler.Helpers.Routing
+
 import Model.DB
 
 main :: IO ()
@@ -45,6 +49,7 @@ app = do
     , dir "doorKeys" doorKeys
     , dir "equipment" equipment
     , dir "people" people
+    , dir "people" (entityId $ \ent -> dir "applications" $ applications ent)
     , dir "possessionContracts" possessionContracts
     , dir "agreements" agreements
     , dir "fobs" fobs

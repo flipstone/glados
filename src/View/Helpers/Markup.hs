@@ -1,6 +1,6 @@
 {-# LANGUAGE QuasiQuotes #-}
 module View.Helpers.Markup
-  ( ToMarkup, toMarkup )
+  ( ToMarkup, toMarkup, showField )
   where
 
 import Data.Text (Text)
@@ -8,6 +8,7 @@ import qualified Data.Text as T
 import qualified Data.Text.Encoding as E
 import Database.Persist.Types
 import Text.Blaze.Html (ToMarkup, toMarkup)
+import Text.Hamlet (shamlet, Html)
 
 instance ToMarkup a => ToMarkup (Maybe a) where
   toMarkup (Just a) = toMarkup a
@@ -28,4 +29,11 @@ instance ToMarkup PersistValue where
           render (PersistTimeOfDay tod) = T.pack $ show tod
           render (PersistUTCTime utc) = T.pack $ show utc
           render PersistNull = T.empty
+
+showField :: ToMarkup value
+          => Text -> (record -> value) -> record -> Html
+showField label getter record = [shamlet|
+  <div>
+    #{label}: #{getter record}
+  |]
 

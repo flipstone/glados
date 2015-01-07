@@ -12,7 +12,7 @@ import Handler.Helpers
 import View.FobAssignments
 
 fobAssignments :: App Response
-fobAssignments = routeResource $ ResourceActions {
+fobAssignments = routeResource $ defaultActions {
     resActionList = fobAssignmentsList
   , resActionNew = fobAssignmentsNew
   , resActionEdit = fobAssignmentsEdit

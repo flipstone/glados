@@ -14,7 +14,7 @@ data PossessionContractView = PossessionContractView {
 possessionContractsListView :: [PossessionContractView]
                             -> Html
 possessionContractsListView possessionContracts = layout [shamlet|
-  <a href="/possessionContracts/new">Add a PossessionContract</a>
+  <a href="/possessionContracts/new">Add a PossessionContract
   <ul>
     $forall pc <- possessionContracts
       <li>
@@ -23,7 +23,7 @@ possessionContractsListView possessionContracts = layout [shamlet|
         #{equipmentMake $ equipment pc}
         #{equipmentModel $ equipment pc}
 
-        <a href="/possessionContracts/edit/#{possessionContractKey pc}">Edit</a>
+        <a href="/possessionContracts/#{possessionContractKey pc}/edit">Edit
   |]
 
 possessionContractsNewView :: View Text -> Html

@@ -11,14 +11,14 @@ data DoorView = DoorView {
 
 doorsListView :: [DoorView] -> Html
 doorsListView doors = layout [shamlet|
-  <a href="/doors/new">Add a Door</a>
+  <a href="/doors/new">Add a Door
   <ul>
     $forall view <- doors
       $with Entity key d <- door view
         <li>
           #{doorName d}
 
-          <a href="/doors/edit/#{key}">Edit</a>
+          <a href="/doors/#{key}/edit">Edit
 |]
 
 doorsNewView :: View Text -> Html

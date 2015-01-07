@@ -14,7 +14,7 @@ data FobAssignmentView = FobAssignmentView {
 fobAssignmentsListView :: [FobAssignmentView]
                        -> Html
 fobAssignmentsListView fobAssignments = layout [shamlet|
-  <a href="/fobAssignments/new">Add a FobAssignment</a>
+  <a href="/fobAssignments/new">Add a FobAssignment
   <ul>
     $forall pc <- fobAssignments
       <li>
@@ -22,7 +22,7 @@ fobAssignmentsListView fobAssignments = layout [shamlet|
         #{personLastName $ person pc}'s
         #{fobKey $ fob pc}
 
-        <a href="/fobAssignments/edit/#{fobAssignmentsKey pc}">Edit</a>
+        <a href="/fobAssignments/#{fobAssignmentsKey pc}/edit">Edit
   |]
 
 fobAssignmentsNewView :: View Text -> Html

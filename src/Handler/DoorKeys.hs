@@ -13,13 +13,13 @@ import Handler.Helpers
 import View.DoorKeys
 
 doorKeys  :: App Response
-doorKeys = routeResource $ (ResourceActions {
+doorKeys = routeResource $ defaultActions {
     resActionList = doorKeysList
   , resActionNew = doorKeysNew
   , resActionEdit = doorKeysEdit
   , resActionCreate = doorKeysCreate
   , resActionUpdate = doorKeysUpdate
-} :: ResourceActions DoorKey)
+  }
 
 doorKeyRes :: Resource DoorKey
 doorKeyRes = defaultResource {

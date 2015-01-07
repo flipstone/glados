@@ -12,7 +12,7 @@ import Handler.Helpers
 import View.PossessionContracts
 
 possessionContracts :: App Response
-possessionContracts = routeResource $ ResourceActions {
+possessionContracts = routeResource $ defaultActions {
     resActionList = possessionContractsList
   , resActionNew = possessionContractsNew
   , resActionEdit = possessionContractsEdit
