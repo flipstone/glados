@@ -66,6 +66,8 @@ applicationForm person a = Application
   <*> "nameOfSpouse" .: optionalString (applicationNameOfSpouse =<< a)
   <*> "referralSource" .: referralSourceForm (applicationReferralSource <$> a)
   <*> "referralOther" .: optionalString (applicationReferralOther =<< a)
+  <*> "interests" .: interestsForm (applicationInterests <$> a)
+  <*> "interestsOther" .: optionalString (applicationInterestsOther =<< a)
 
 referralSourceForm :: Monad m => Formlet Text m ReferralSource
 referralSourceForm r = ReferralSource
@@ -75,6 +77,16 @@ referralSourceForm r = ReferralSource
   <*> "wordOfMouth" .: bool (referralWordOfMouth <$> r)
   <*> "conference" .: bool (referralConference <$> r)
   <*> "other" .: bool (referralOther <$> r)
+
+interestsForm :: Monad m => Formlet Text m Interests
+interestsForm i = Interests
+  <$> "3dprinting" .: bool (interest3DPrinting <$> i)
+  <*> "metalworking" .: bool (interestMetalworking <$> i)
+  <*> "electronics" .: bool (interestElectronics <$> i)
+  <*> "woodworking" .: bool (interestWoodworking <$> i)
+  <*> "coworking" .: bool (interestCoworking <$> i)
+  <*> "gaming" .: bool (interestGaming <$> i)
+  <*> "other" .: bool (interestOther <$> i)
 
 
 planTypeOptions :: [ (MembershipPlanType, T.Text) ]

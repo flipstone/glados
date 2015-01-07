@@ -29,6 +29,8 @@ Application
   nameOfSpouse String Maybe
   referralSource ReferralSource
   referralOther String Maybe
+  interests Interests
+  interestsOther String Maybe
 Equipment
   make String
   model String

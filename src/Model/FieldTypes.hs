@@ -66,3 +66,42 @@ instance PersistField ReferralSource where
 instance PersistFieldSql ReferralSource where
   sqlType _ = SqlInt64
 
+data Interests = Interests {
+    interest3DPrinting :: Bool
+  , interestMetalworking :: Bool
+  , interestElectronics :: Bool
+  , interestWoodworking :: Bool
+  , interestCoworking :: Bool
+  , interestGaming :: Bool
+  , interestOther :: Bool
+  }
+
+encodeInterests :: Interests -> Int64
+encodeInterests int =
+      flag 0 (interest3DPrinting int)
+  .|. flag 1 (interestMetalworking int)
+  .|. flag 2 (interestElectronics int)
+  .|. flag 3 (interestWoodworking int)
+  .|. flag 4 (interestCoworking int)
+  .|. flag 5 (interestGaming int)
+  .|. flag 6 (interestOther int)
+
+decodeInterests :: Int64 -> Interests
+decodeInterests bits = Interests {
+    interest3DPrinting =    testBit bits 0
+  , interestMetalworking =  testBit bits 1
+  , interestElectronics =   testBit bits 2
+  , interestWoodworking =   testBit bits 3
+  , interestCoworking =     testBit bits 4
+  , interestGaming =        testBit bits 5
+  , interestOther =         testBit bits 6
+  }
+
+instance PersistField Interests where
+  toPersistValue = PersistInt64 . encodeInterests
+  fromPersistValue (PersistInt64 n) = Right (decodeInterests n)
+  fromPersistValue _ = Left "Interests requires an int64 column type"
+
+instance PersistFieldSql Interests where
+  sqlType _ = SqlInt64
+

@@ -33,7 +33,7 @@ applicationsShowView (Entity _ person) (Entity id a) = layout [shamlet|
         <li>Twitter
 
       $if referralMeetup source
-        <li>Twitter
+        <li>Meetup
 
       $if referralWordOfMouth source
         <li>Word of mouth
@@ -45,6 +45,35 @@ applicationsShowView (Entity _ person) (Entity id a) = layout [shamlet|
         <li>Other (see below)
 
   ^{showField "Other Referral" applicationReferralOther a}
+
+  <h2>Interests
+  $with int <- applicationInterests a
+    <ul>
+      $if interest3DPrinting int
+        <li>3D Printing
+
+      $if interestMetalworking int
+        <li>Metalworking
+
+      $if interestElectronics int
+        <li>Electronics / Microcontrollers
+
+      $if interestWoodworking int
+        <li>Woodworking
+
+      $if interestCoworking int
+        <li>Coworking
+
+      $if interestGaming int
+        <li>Tabletop Gaming
+
+      $if interestOther int
+        <li>Other
+
+      $if interestMetalworking int
+        <li>Metalworking
+
+  ^{showField "Other Interest" applicationInterestsOther a}
   |]
 
 applicationsNewView :: Entity Person -> View Text -> Html
@@ -101,4 +130,14 @@ applicationFields view = [shamlet|
 
   ^{textField "referralOther" "Other Referral" view}
 
+  <h2>Interests
+  ^{checkboxField "interests.3dprinting" "3D Printing" view}
+  ^{checkboxField "interests.metalworking" "Metalworking" view}
+  ^{checkboxField "interests.electronics" "Electronics / Microcontrollers" view}
+  ^{checkboxField "interests.woodworking" "Woodworking" view}
+  ^{checkboxField "interests.coworking" "Coworking" view}
+  ^{checkboxField "interests.gaming" "Tabletop Gaming" view}
+  ^{checkboxField "interests.other" "Other" view}
+
+  ^{textField "interestsOther" "Other Interest" view}
   |]
