@@ -27,6 +27,8 @@ Application
   emailAddress String Maybe
   planType MembershipPlanType
   nameOfSpouse String Maybe
+  referralSource ReferralSource
+  referralOther String Maybe
 Equipment
   make String
   model String

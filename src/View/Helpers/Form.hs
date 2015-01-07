@@ -14,6 +14,19 @@ textField path labelText view = [shamlet|
     ^{fieldErrors path view}
   |]
 
+checkboxField :: Text -> Html -> View Text -> Html
+checkboxField path labelText view = [shamlet|
+  <div>
+    <input type="checkbox"
+           id="#{ref}"
+           name="#{ref}"
+           :sel:checked>
+    ^{label path view labelText}
+    ^{fieldErrors path view}
+  |]
+  where ref = absoluteRef path view
+        sel = fieldInputBool path view
+
 selectField :: Text -> Html -> View Text -> Html
 selectField path labelText view = [shamlet|
     <div>

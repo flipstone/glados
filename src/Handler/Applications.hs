@@ -64,6 +64,18 @@ applicationForm person a = Application
   <*> "emailAddress" .: optionalString (applicationEmailAddress =<< a)
   <*> "planType" .: choice planTypeOptions (applicationPlanType <$> a)
   <*> "nameOfSpouse" .: optionalString (applicationNameOfSpouse =<< a)
+  <*> "referralSource" .: referralSourceForm (applicationReferralSource <$> a)
+  <*> "referralOther" .: optionalString (applicationReferralOther =<< a)
+
+referralSourceForm :: Monad m => Formlet Text m ReferralSource
+referralSourceForm r = ReferralSource
+  <$> "searchEngine" .: bool (referralSearchEngine <$> r)
+  <*> "twitter" .: bool (referralTwitter <$> r)
+  <*> "meetup" .: bool (referralMeetup <$> r)
+  <*> "wordOfMouth" .: bool (referralWordOfMouth <$> r)
+  <*> "conference" .: bool (referralConference <$> r)
+  <*> "other" .: bool (referralOther <$> r)
+
 
 planTypeOptions :: [ (MembershipPlanType, T.Text) ]
 planTypeOptions = map mkOption membershipPlanTypes
