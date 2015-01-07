@@ -25,12 +25,20 @@ Application
   cellPhone String Maybe
   workPhone String Maybe
   emailAddress String Maybe
+
   planType MembershipPlanType
   nameOfSpouse String Maybe
+
   referralSource ReferralSource
   referralOther String Maybe
+
   interests Interests
   interestsOther String Maybe
+
+  emergencyContactName String
+  emergencyContactHomePhone String
+  emergencyContactWorkPhone String
+
 Equipment
   make String
   model String

@@ -74,6 +74,11 @@ applicationsShowView (Entity _ person) (Entity id a) = layout [shamlet|
         <li>Metalworking
 
   ^{showField "Other Interest" applicationInterestsOther a}
+
+  <h2>Person to Notify in Case of Emergency
+  ^{showField "Name" applicationEmergencyContactName a}
+  ^{showField "Home Phone" applicationEmergencyContactHomePhone a}
+  ^{showField "Work Phone" applicationEmergencyContactWorkPhone a}
   |]
 
 applicationsNewView :: Entity Person -> View Text -> Html
@@ -140,4 +145,9 @@ applicationFields view = [shamlet|
   ^{checkboxField "interests.other" "Other" view}
 
   ^{textField "interestsOther" "Other Interest" view}
+
+  <h2>Person to Notify in Case of Emergency
+  ^{textField "emergencyContactName" "Name" view}
+  ^{textField "emergencyContactHomePhone" "Home Phone" view}
+  ^{textField "emergencyContactWorkPhone" "Work Phone" view}
   |]

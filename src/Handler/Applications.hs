@@ -62,12 +62,19 @@ applicationForm person a = Application
   <*> "cellPhone" .: optionalString (applicationCellPhone =<< a)
   <*> "workPhone" .: optionalString (applicationWorkPhone =<< a)
   <*> "emailAddress" .: optionalString (applicationEmailAddress =<< a)
+
   <*> "planType" .: choice planTypeOptions (applicationPlanType <$> a)
   <*> "nameOfSpouse" .: optionalString (applicationNameOfSpouse =<< a)
+
   <*> "referralSource" .: referralSourceForm (applicationReferralSource <$> a)
   <*> "referralOther" .: optionalString (applicationReferralOther =<< a)
+
   <*> "interests" .: interestsForm (applicationInterests <$> a)
   <*> "interestsOther" .: optionalString (applicationInterestsOther =<< a)
+
+  <*> "emergencyContactName" .: validate notEmpty (string (applicationEmergencyContactName <$> a))
+  <*> "emergencyContactHomePhone" .: validate notEmpty (string (applicationEmergencyContactHomePhone <$> a))
+  <*> "emergencyContactWorkPhone" .: validate notEmpty (string (applicationEmergencyContactWorkPhone <$> a))
 
 referralSourceForm :: Monad m => Formlet Text m ReferralSource
 referralSourceForm r = ReferralSource
