@@ -17,6 +17,7 @@ import Handler.Equipment
 import Handler.Fob
 import Handler.FobAssignments
 import Handler.Memberships
+import Handler.Payments
 import Handler.People
 import Handler.PossessionContracts
 import Handler.Open
@@ -53,6 +54,10 @@ app = do
     , dir "people" (entityId $ \ent ->
         msum [ dir "applications" $ applications ent
              , dir "membership" $ memberships ent
+             ])
+
+    , dir "memberships" (entityId $ \ent ->
+        msum [ dir "payments" $ payments ent
              ])
 
     , dir "possessionContracts" possessionContracts

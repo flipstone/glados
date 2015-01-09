@@ -1,8 +1,10 @@
 {-# LANGUAGE TemplateHaskell #-}
+{-# LANGUAGE GeneralizedNewtypeDeriving #-}
 module Model.FieldTypes where
 
 import Data.Bits
 import Data.Int
+import Numeric
 
 import Database.Persist
 import Database.Persist.Sql
@@ -104,4 +106,27 @@ instance PersistField Interests where
 
 instance PersistFieldSql Interests where
   sqlType _ = SqlInt64
+
+newtype Money = Money Rational
+  deriving (Eq, Ord, Enum, Num, Real, Fractional, RealFrac)
+
+instance Show Money where
+  show (Money n) =
+    let cents = round (n * 100) :: Int
+    in case reverse (show cents) of
+       c:d:whole -> reverse (c:d:'.':whole)
+       somethingElse -> reverse somethingElse
+
+instance Read Money where
+  readsPrec _ input = do
+    (n, rest) <- readFloat input
+    return $ (Money n, rest)
+
+instance PersistField Money where
+  toPersistValue (Money n) = PersistRational n
+  fromPersistValue (PersistRational n) = Right (Money n)
+  fromPersistValue _ = Left "Money requires an int column type"
+
+instance PersistFieldSql Money where
+  sqlType _ = SqlNumeric 7 2
 

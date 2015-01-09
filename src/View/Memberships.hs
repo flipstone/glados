@@ -9,15 +9,20 @@ membershipsShowView :: Entity Person -> Entity Membership -> Html
 membershipsShowView (Entity personId person) (Entity id m) = layout [shamlet|
   ^{membershipHeader person}
 
-  $if membershipActive m
-    Active
-  $else
-    Inactive
+  <div>
+    $if membershipActive m
+      Active
+    $else
+      Inactive
 
-  \ -
+    \ -
 
-  <a href="/people/#{personId}/membership/#{id}/edit">
-    Edit
+    <a href="/people/#{personId}/membership/#{id}/edit">
+      Edit
+
+  <div>
+    <a href="/memberships/#{id}/payments">
+      Manage Payments
 
   |]
 
