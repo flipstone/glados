@@ -26,7 +26,7 @@ diff $CP_PATHS || \
   cp $CP_PATHS || \
   echo "Binary has changed. Copying"
 
-docker pull quay.io/flipstone/glados
+docker pull -a quay.io/flipstone/glados
 TAG="quay.io/flipstone/glados:$VERSION"
 docker build -t $TAG containers/release
 
