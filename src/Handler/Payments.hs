@@ -30,7 +30,7 @@ paymentRes membership = defaultResource {
 
 paymentList :: Entity Membership -> App Response
 paymentList membership = do
-  payments <- runDB $ selectList []
+  payments <- runDB $ selectList [ PaymentMembershipId ==. entityKey membership ]
                                  [ Desc PaymentMembershipYear
                                  , Desc PaymentMembershipMonth
                                  ]
