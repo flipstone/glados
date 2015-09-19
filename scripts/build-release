@@ -14,7 +14,7 @@ echo "=== Building Docker Container ==="
 
 cp .cabal-sandbox/bin/glados containers/release/glados
 
-# docker pull -a quay.io/flipstone/glados
+docker pull flipstone/glados:latest
 docker build -t flipstone/glados:$VERSION containers/release
 docker tag -f flipstone/glados:$VERSION flipstone/glados:latest
 
