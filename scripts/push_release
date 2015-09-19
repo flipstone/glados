@@ -1,4 +1,0 @@
-#!/bin/sh
-
-docker push quay.io/flipstone/glados
-

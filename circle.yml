@@ -1,0 +1,45 @@
+machine:
+  services:
+    - docker
+  environment:
+    HAITATSU_VERSION: 0.1.4
+
+dependencies:
+  cache_directories:
+    - "dist"
+    - ".cabal-sandbox"
+    - ".cabal"
+  override:
+    - docker login -e $DOCKER_EMAIL -u $DOCKER_USER -p $DOCKER_PASSWORD
+    - sudo curl -L https://github.com/docker/compose/releases/download/1.3.0/docker-compose-`uname -s`-`uname -m` -o /usr/local/bin/docker-compose
+    - sudo chmod +x /usr/local/bin/docker-compose
+    - >
+      if [ "$CIRCLE_BRANCH" != "production" ]; then
+        set -e
+        docker-compose run dev cabal sandbox init
+        docker-compose run dev cabal update
+        docker-compose run dev cabal configure
+        docker-compose run dev cabal install
+      else
+        echo "This is a production build. Skipping dependencies."
+      fi;
+    - sed -i '/^$/d' ~/.aws/credentials
+
+test:
+  override:
+    - >
+      if [ "$CIRCLE_BRANCH" != "production" ]; then
+        set -e
+        ./scripts/build-release $CIRCLE_SHA1
+        docker push flipstone/glados:$CIRCLE_SHA1
+        docker push flipstone/glados:latest
+      else
+        echo "This is a production build. Skipping container build."
+      fi;
+
+deployment:
+  production:
+    branch: production
+    commands:
+      - ./scripts/deploy production $CIRCLE_SHA1
+
