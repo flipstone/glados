@@ -34,9 +34,6 @@ data ReferralSource = ReferralSource {
   , referralOther :: Bool
   }
 
-zeroBits :: Bits a => a
-zeroBits = clearBit (bit 0) 0
-
 flag :: Bits a => Int -> Bool -> a
 flag _ False = zeroBits
 flag n True = bit n
