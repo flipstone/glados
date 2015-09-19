@@ -16,10 +16,7 @@ dependencies:
     - >
       if [ "$CIRCLE_BRANCH" != "production" ]; then
         set -e
-        docker-compose run api cabal sandbox init
-        docker-compose run api cabal update
-        docker-compose run api cabal configure
-        docker-compose run api cabal install
+        docker-compose run api sh -c 'cabal sandbox init && cabal update && cabal install'
       else
         echo "This is a production build. Skipping dependencies."
       fi;
