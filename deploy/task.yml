@@ -2,8 +2,8 @@ family: ${task_family}
 containerDefinitions:
   - name: api
     image: flipstone/glados:${version}
-    cpu: 100
-    memory: 200
+    cpu: 10
+    memory: 10
     portMappings:
       - containerPort: 8000
         hostPort: 26320
