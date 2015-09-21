@@ -16,6 +16,16 @@ if [ "$VERSION" = "" ]; then
   exit 1
 fi;
 
+if [ "$CONFIG_ACCESS_KEY_ID" == "" ]; then
+  echo "CONFIG_ACCESS_KEY_ID must be set in your environment!"
+  exit 1;
+fi;
+
+if [ "$CONFIG_SECRET_ACCESS_KEY" == "" ]; then
+  echo "CONFIG_SECRET_ACCESS_KEY must be set in your environment!"
+  exit 1;
+fi;
+
 
 if [ "$CIRCLECI" = "" ]; then
   DOCKER_RM="--rm"
@@ -25,6 +35,6 @@ fi;
 
 ./tasks/haitatsu \
   -e $ENVIRONMENT \
-  -c version=$VERSION \
+  -c version=$VERSION,config_access_key_id=$CONFIG_ACCESS_KEY_ID,config_secret_access_key=$CONFIG_SECRET_ACCESS_KEY \
   deliver
 
