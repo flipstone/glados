@@ -1,18 +1,30 @@
 #!/bin/sh
+
 set -e
 
-DEPLOY_ROOT=/srv/glados
-HOST="glados.flipstone.com"
-USERNAME=ubuntu
-SSH_DEST=$USERNAME@$HOST
-ROBOT="flipstone+flippy"
-ROBOT_PASS="JGW4JUBC758SIC4BJFJTFY6L3JTCUH5K0C57CBIB8YREM711322HDENLN6HI621W"
+ENVIRONMENT=$1
 
-#./tasks/decrypt-authorization
+if [ "$ENVIRONMENT" = "" ]; then
+  echo "Please specify the environment you would like to deploy to"
+  exit 1
+fi;
 
-rsync -avz -e "ssh $*" \
-  deployment.template/ \
-  $SSH_DEST:$DEPLOY_ROOT
+VERSION=$2
 
-ssh $* $SSH_DEST "sudo docker login -u=$ROBOT -p=$ROBOT_PASS -e=anything quay.io"
-ssh $* $SSH_DEST "DEPLOY_ROOT=$DEPLOY_ROOT $DEPLOY_ROOT/tasks/update"
+if [ "$VERSION" = "" ]; then
+  echo "Please specify the container version you'd like to deploy"
+  exit 1
+fi;
+
+
+if [ "$CIRCLECI" = "" ]; then
+  DOCKER_RM="--rm"
+fi;
+
+./tasks/retriable 3 docker pull flipstone/haitatsu:0.1.4
+
+./tasks/haitatsu \
+  -e $ENVIRONMENT \
+  -c version=$VERSION \
+  deliver
+

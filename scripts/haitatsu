@@ -1,0 +1,19 @@
+#!/bin/sh
+
+set -e
+
+if [ "$CIRCLECI" = "" ]; then
+  DOCKER_RM="--rm"
+fi;
+
+if [ "$AWS_ROOT" = "" ]; then
+  AWS_ROOT=$HOME
+fi;
+
+docker run \
+  -it $DOCKER_RM \
+  -v $PWD/deploy:/deploy \
+  -v $AWS_ROOT/.aws:/root/.aws \
+  flipstone/haitatsu:0.1.4 \
+  $@
+

@@ -1,0 +1,23 @@
+#!/bin/sh
+
+RETRIES=$1
+shift
+
+"$@"
+
+STATUS=$?
+
+if [ "$STATUS" = "0" ]; then
+  exit
+fi;
+
+if [ "$RETRIES" -le "0" ]; then
+  exit $STATUS
+fi;
+
+
+echo ""
+echo "== Retriable command failed... trying again ($RETRIES tries left) =="
+echo ""
+
+exec $0 $((RETRIES - 1)) "$@"

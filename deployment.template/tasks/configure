@@ -1,8 +1,0 @@
-#!/bin/sh
-set -e
-
-. $DEPLOY_ROOT/settings
-
-$TASKS/configure-db
-$TASKS/configure-nginx
-

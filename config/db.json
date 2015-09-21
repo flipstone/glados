@@ -1,4 +1,0 @@
-{
-  "development": "host=db port=5432 dbname=glados user=glados password=glados"
-}
-

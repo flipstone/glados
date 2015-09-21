@@ -6,7 +6,6 @@ import Happstack.Server
 import Database.Persist.Postgresql
 
 import App.Types
-import App.Environment
 import Config.DB
 
 import Handler.Agreement
@@ -29,18 +28,12 @@ import Handler.Helpers.Routing
 import Model.DB
 
 main :: IO ()
-main = getEnvironment >>= runServer
-
-runServer :: Env -> IO ()
-runServer env = do
-  dbConfig <- loadDBConfig
-  runEnvOrCrash env $ do
-    connString <- getForEnv dbConfig
-    return $
-      withPostgresqlPool connString 5 $ \pool -> do
-        runStdoutLoggingT $ runSqlPool (runMigration migrateAll) pool
-        putStrLn $ "Starting server on port " ++ (show $ 8000)
-        simpleHTTP nullConf $ runApp pool app
+main = do
+  connString <- loadDBConfig
+  withPostgresqlPool connString 5 $ \pool -> do
+    runStdoutLoggingT $ runSqlPool (runMigration migrateAll) pool
+    putStrLn $ "Starting server on port " ++ (show $ 8000)
+    simpleHTTP nullConf $ runApp pool app
 
 app :: App Response
 app = do
@@ -70,11 +63,7 @@ app = do
 
 instance BackendHost IO where
   runDB action = do
-    dbConfig <- loadDBConfig
-
-    runEnvOrCrash Development $ do
-      connString <- getForEnv dbConfig
-      return $
-        withPostgresqlPool connString 1 $ \pool -> do
-          runBackendPool pool action
+    connString <- loadDBConfig
+    withPostgresqlPool connString 1 $ \pool -> do
+      runBackendPool pool action
 

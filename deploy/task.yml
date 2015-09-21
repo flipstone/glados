@@ -1,0 +1,22 @@
+family: ${task_family}
+containerDefinitions:
+  - name: api
+    image: flipstone/glados:${version}
+    cpu: 100
+    memory: 200
+    portMappings:
+      - containerPort: 8000
+        hostPort: 26320
+    essential: true
+    environment:
+      - name: CONFIG_BUCKET
+        value: ${config_bucket}
+
+      - name: CONFIG_KEY
+        value: ${config_key}
+
+      - name: CONFIG_ACCESS_KEY_ID
+        value: ${config_access_key_id}
+
+      - name: CONFIG_SECRET_ACCESS_KEY
+        value: ${config_secret_access_key}
