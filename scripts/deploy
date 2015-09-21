@@ -16,12 +16,12 @@ if [ "$VERSION" = "" ]; then
   exit 1
 fi;
 
-if [ "$CONFIG_ACCESS_KEY_ID" == "" ]; then
+if [ "$CONFIG_ACCESS_KEY_ID" = "" ]; then
   echo "CONFIG_ACCESS_KEY_ID must be set in your environment!"
   exit 1;
 fi;
 
-if [ "$CONFIG_SECRET_ACCESS_KEY" == "" ]; then
+if [ "$CONFIG_SECRET_ACCESS_KEY" = "" ]; then
   echo "CONFIG_SECRET_ACCESS_KEY must be set in your environment!"
   exit 1;
 fi;
