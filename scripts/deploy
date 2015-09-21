@@ -31,9 +31,9 @@ if [ "$CIRCLECI" = "" ]; then
   DOCKER_RM="--rm"
 fi;
 
-./tasks/retriable 3 docker pull flipstone/haitatsu:0.1.4
+./scripts/retriable 3 docker pull flipstone/haitatsu:0.1.4
 
-./tasks/haitatsu \
+./scripts/haitatsu \
   -e $ENVIRONMENT \
   -c version=$VERSION,config_access_key_id=$CONFIG_ACCESS_KEY_ID,config_secret_access_key=$CONFIG_SECRET_ACCESS_KEY \
   deliver
