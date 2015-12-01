@@ -4,7 +4,7 @@ import Control.Applicative
 import Control.Monad.Trans (lift)
 import Control.Monad.Trans.Except
 import Data.Maybe
-import Data.Time.Calendar
+import Data.Time
 
 import Database.Persist
 
@@ -21,6 +21,7 @@ data OpenError = DoorNotFound
                | FobNotFound
                | FobNotAssigned
                | FobAssignmentNotCurrent
+               | DoorKeyInsufficientAccess
 
 type Opening = ExceptT OpenError AppBackend
 
@@ -31,16 +32,17 @@ required e opening = do
     Just a -> return a
     _ -> throwE e
 
-tryOpenOn :: Day
+tryOpenOn :: UTCTime
           -> Unique Door
           -> Unique Fob
           -> AppBackend OpenResult
-tryOpenOn today doorKey fobKey = runExceptT $ do
+tryOpenOn targetTime doorKey fobKey = runExceptT $ do
+  let day = utctDay targetTime
   door <- findDoor doorKey
   fob <- findFob fobKey
-  personId <- findPersonId today fob
+  personId <- findPersonId day fob
 
-  checkDoorKey today (entityKey door) personId
+  checkDoorKey targetTime (entityKey door) personId
 
 findDoor :: Unique Door -> Opening (Entity Door)
 findDoor doorKey = required DoorNotFound <$>
@@ -61,8 +63,12 @@ findPersonId today fob = do
   else
     throwE FobAssignmentNotCurrent
 
-checkDoorKey :: Day -> DoorId -> PersonId -> Opening Ok
-checkDoorKey today doorId personId = do
+checkDoorKey :: UTCTime
+             -> DoorId
+             -> PersonId
+             -> Opening Ok
+checkDoorKey targetTime doorId personId = do
+  let today = utctDay targetTime
   doorKeys <- map entityVal <$>
                 selectList [ DoorKeyDoorId ==. doorId
                            , DoorKeyPersonId ==. personId
@@ -71,16 +77,34 @@ checkDoorKey today doorId personId = do
 
   if null doorKeys then
     throwE DoorKeyNotFound
-  else if any (isDoorKeyCurrent today) doorKeys then
-    return Ok
-  else
-    throwE DoorKeyNotCurrent
+  else do
+    let activeKeys = filter (isDoorKeyCurrent today) doorKeys
+    if null activeKeys then
+      throwE DoorKeyNotCurrent
+    else do
+      let accesses = map doorKeyKeyAccess activeKeys
+      if any (isAccessibleTime targetTime) accesses then
+        return Ok
+      else
+        throwE DoorKeyInsufficientAccess
 
-isDoorKeyCurrent :: Day -> DoorKey -> Bool
+isAccessibleTime :: UTCTime
+                 -> KeyAccess
+                 -> Bool
+isAccessibleTime _ Unrestricted = True
+isAccessibleTime targetTime _ =
+  let diffTime = utctDayTime targetTime
+  in  (diffTime >= 54000) && (diffTime <= 82800) -- 10a to 6p EST in UTC
+
+isDoorKeyCurrent :: Day
+                 -> DoorKey
+                 -> Bool
 isDoorKeyCurrent = isCurrent doorKeyStartDate
                              doorKeyExpirationDate
 
-isAssignmentCurrent :: Day -> FobAssignment -> Bool
+isAssignmentCurrent :: Day
+                    -> FobAssignment
+                    -> Bool
 isAssignmentCurrent = isCurrent fobAssignmentStartDate
                                 fobAssignmentExpirationDate
 
@@ -89,9 +113,9 @@ isCurrent :: (a -> Day) -- start field
           -> Day
           -> a
           -> Bool
-isCurrent start expire today a =
-  if today >= start a then
-    case expire a of
+isCurrent startGetter expireGetter today a =
+  if today >= startGetter a then
+    case expireGetter a of
       Just e -> today <= e
       Nothing -> True
   else

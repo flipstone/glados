@@ -20,7 +20,7 @@ open = do
             openError "fobKey parameter is required"
 
   now <- liftIO $ getCurrentTime
-  result <- runDB $ tryOpenOn (utctDay now)
+  result <- runDB $ tryOpenOn now
                               (UniqueAddress hardwareAddress)
                               (UniqueKey fobKey)
 
@@ -36,6 +36,7 @@ openErrorMessage DoorKeyNotCurrent = "Door key not current"
 openErrorMessage FobNotFound = "Fob not found"
 openErrorMessage FobNotAssigned = "Fob not assigned"
 openErrorMessage FobAssignmentNotCurrent = "Fob assignement is not current"
+openErrorMessage DoorKeyInsufficientAccess = "User has insufficient access for requested time"
 
 instance ToMessage Value where
   toContentType _ = "application/json"
