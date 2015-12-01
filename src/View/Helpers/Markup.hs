@@ -35,6 +35,9 @@ instance ToMarkup PersistValue where
 instance ToMarkup MembershipPlanType where
   toMarkup val = toMarkup (show val)
 
+instance ToMarkup KeyAccess where
+  toMarkup val = toMarkup (show val)
+
 showField :: ToMarkup value
           => Text -> (record -> value) -> record -> Html
 showField label getter record = [shamlet|

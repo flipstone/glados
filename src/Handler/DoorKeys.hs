@@ -69,9 +69,14 @@ doorKeyForm doorKey = monadic $ do
     <*> "personId" .: foreignKey people (doorKeyPersonId <$> doorKey)
     <*> "startDate" .: dateField (doorKeyStartDate <$> doorKey)
     <*> "expirationDate" .: optionalDateField (doorKeyExpirationDate =<< doorKey)
+    <*> "keyAccess" .: choice keyAccessOptions (doorKeyKeyAccess <$> doorKey)
 
 instance SelectOption Person where
   toOptionText p = T.pack $ personFirstName p ++ " " ++
                             personLastName p
 instance SelectOption Door where
   toOptionText d = T.pack $ doorName d
+
+keyAccessOptions :: [ (KeyAccess, T.Text) ]
+keyAccessOptions = map mkOption keyAccesses
+  where mkOption acc = (acc, T.pack (show acc))

@@ -10,6 +10,16 @@ import Database.Persist
 import Database.Persist.Sql
 import Database.Persist.TH
 
+data KeyAccess =
+    MemberHours
+  | Unrestricted
+  deriving (Show, Read, Eq, Enum, Bounded)
+
+derivePersistField "KeyAccess"
+
+keyAccesses :: [KeyAccess]
+keyAccesses = [minBound .. maxBound]
+
 data MembershipPlanType =
     StudentTinker
   | StudentHacker
@@ -23,7 +33,6 @@ membershipPlanTypes :: [MembershipPlanType]
 membershipPlanTypes = [minBound .. maxBound]
 
 derivePersistField "MembershipPlanType"
-
 
 data ReferralSource = ReferralSource {
     referralSearchEngine :: Bool

@@ -57,6 +57,7 @@ DoorKey
   personId PersonId
   startDate Day
   expirationDate Day Maybe
+  keyAccess KeyAccess default='Unrestricted'
   deriving Show
 
 Equipment

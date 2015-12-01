@@ -21,9 +21,9 @@ doorKeysListView doorKeys = layout [shamlet|
           $with Entity _ person <- person view
             $with Entity _ door <- door view
               #{personFirstName $ person } #{personLastName $ person }
-              can open #{doorName $ door}
+              can open #{doorName $ door} : #{doorKeyKeyAccess doorKey}
 
-          <a href="/doorKeys/#{id}/edit">Edit
+          &nbsp;&nbsp;<a href="/doorKeys/#{id}/edit">Edit
 
   |]
 
@@ -46,6 +46,7 @@ doorKeyFields :: View Text -> Html
 doorKeyFields view = do [shamlet|
   ^{selectField "personId" "Person" view}
   ^{selectField "doorId" "Door" view}
+  ^{selectField "keyAccess" "Access" view}
   ^{dateField "startDate" "Start Date" view}
   ^{dateField "expirationDate" "Expiration Date" view}
   |]
