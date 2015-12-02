@@ -19,7 +19,7 @@ db:
     - 5432
 
   ports:
-    - 5432:5432
+    - 54321:5432
 
   volumes:
     - ./initdb.d:/docker-entrypoint-initdb.d
