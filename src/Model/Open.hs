@@ -5,7 +5,7 @@ import Control.Monad.Trans (lift)
 import Control.Monad.Trans.Except
 import Data.Maybe
 import Data.Time
-
+import Data.Time.Calendar.OrdinalDate (sundayStartWeek)
 import Database.Persist
 
 import App.Types
@@ -94,7 +94,10 @@ isAccessibleTime :: UTCTime
 isAccessibleTime _ Unrestricted = True
 isAccessibleTime targetTime _ =
   let diffTime = utctDayTime targetTime
-  in  (diffTime >= 54000) && (diffTime <= 82800) -- 10a to 6p EST in UTC
+      day = utctDay targetTime
+  in  case sundayStartWeek day of
+        (_,0) -> False
+        (_,_) -> (diffTime >= 54000) && (diffTime <= 82800) -- 10a to 6p EST in UTC
 
 isDoorKeyCurrent :: Day
                  -> DoorKey
