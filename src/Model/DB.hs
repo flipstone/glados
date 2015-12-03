@@ -86,25 +86,10 @@ Membership
   MemberId personId
   deriving Show
 
-Payment
-  membershipId MembershipId
-  receivedOn Day
-  amount Money
-  membershipMonth Int
-  membershipYear Int
-  deriving Show
-
 Person
   firstName String
   lastName String
   deriving Show
 
-PossessionContract
-  personId PersonId
-  equipmentId EquipmentId
-  paymentCents Int Maybe
-  startDate Day
-  expirationDate Day Maybe
-  deriving Show
 |]
 

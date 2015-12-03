@@ -46,9 +46,4 @@ welcomeView = layout [shamlet|
     <dd>
       A piece of equipment sitting in the lab
 
-    <dt>Possession Contract
-    <dd>
-      A record recognizing the terms of how Equipment
-      came to the lab from a specific Person.
-
 |]

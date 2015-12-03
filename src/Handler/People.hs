@@ -31,9 +31,6 @@ peopleList = do
     loadAssociations people $
       PersonView
       <$> own id
-      <*> ( belongsTos PossessionContractEquipmentId
-            `throughMany`
-            hasManys PossessionContractPersonId )
 
   ok $ toResponse $ peopleListView personViews
 
