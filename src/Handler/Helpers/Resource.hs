@@ -19,6 +19,7 @@ data ResourceActions a = ResourceActions {
   , resActionShow :: Entity a -> App Response
   , resActionCreate :: App Response
   , resActionUpdate :: Entity a -> App Response
+  , resActionDelete :: Entity a -> App Response
   }
 
 defaultActions :: ResourceActions a
@@ -29,6 +30,7 @@ defaultActions = ResourceActions {
   , resActionShow = const notAvailable
   , resActionCreate = notAvailable
   , resActionUpdate = const notAvailable
+  , resActionDelete = const notAvailable
   }
   where
     notAvailable = notFound $ toResponse ("Action not available for this resource"::String)
@@ -43,6 +45,7 @@ routeResource actions = msum [
   , entityId $ \ent ->
       msum [ methodM POST >> resActionUpdate actions ent
            , methodM GET >> resActionShow actions ent
+           , methodM DELETE >> resActionDelete actions ent
            , dir "edit" $ methodM GET >> resActionEdit actions ent
            ]
   ]
@@ -50,6 +53,7 @@ routeResource actions = msum [
 data Resource a = Resource {
     resCreate :: a -> AppBackend (Key a)
   , resUpdate :: Key a -> a -> AppBackend ()
+  , resDelete :: Key a -> AppBackend ()
   , resNewView :: View Text -> Html
   , resEditView :: Entity a -> View Text -> Html
   , resShowView :: Entity a -> View Text -> Html
@@ -62,6 +66,7 @@ defaultResource :: ( PersistEntity a
 defaultResource = Resource {
     resCreate = insert
   , resUpdate = replace
+  , resDelete = delete
   , resNewView = const ""
   , resEditView = const (const "")
   , resShowView = const (const "")
@@ -81,6 +86,12 @@ handleCreate res (view, result) =
     Nothing ->
       badRequest $ toResponse $ resNewView res view
 
+handleDelete :: Resource a
+            -> Entity a
+            -> App Response
+handleDelete res oldEnt@(Entity key _) = do
+  runDB $ resDelete res key
+  seeOther (resIndexUri res) $ toResponse ("Look over there"::String)
 
 handleUpdate :: Resource a
              -> Entity a

@@ -19,6 +19,7 @@ doorKeys = routeResource $ defaultActions {
   , resActionEdit = doorKeysEdit
   , resActionCreate = doorKeysCreate
   , resActionUpdate = doorKeysUpdate
+  , resActionDelete = doorKeysDelete
   }
 
 doorKeyRes :: Resource DoorKey
@@ -59,6 +60,10 @@ doorKeysUpdate :: Entity DoorKey -> App Response
 doorKeysUpdate ent@(Entity key doorKey) = do
   post <- runForm "doorKey" (doorKeyForm (Just doorKey))
   handleUpdate doorKeyRes ent post
+
+doorKeysDelete :: Entity DoorKey -> App Response
+doorKeysDelete ent@(Entity key doorkey) =
+  handleDelete doorKeyRes ent
 
 doorKeyForm :: Maybe DoorKey -> Form Text App DoorKey
 doorKeyForm doorKey = monadic $ do
