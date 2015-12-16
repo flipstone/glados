@@ -23,7 +23,7 @@ doorKeysListView doorKeys = layout [shamlet|
               #{personFirstName $ person } #{personLastName $ person }
               can open #{doorName $ door} : #{doorKeyKeyAccess doorKey}
 
-          &nbsp;&nbsp;<a href="/doorKeys/#{id}/edit">Edit
+          &nbsp;&nbsp;<a href="/doorKeys/#{id}/edit">Edit</a>
 
   |]
 
